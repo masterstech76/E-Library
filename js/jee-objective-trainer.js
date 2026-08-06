@@ -287,11 +287,11 @@
         body: JSON.stringify({ message: q }),
         signal: controller.signal,
       })
-.then((r) => (r.ok ? r.json() : Promise.reject(new Error("bad status"))))
+        .then((r) => (r.ok ? r.json() : Promise.reject(new Error("bad status"))))
         .then((data) => {
           clearTimeout(timer);
           resolve({
-            text: data.reply || "🤖 I couldn't find that. Try rephrasing.",
+            text: data.answer || "🤖 I couldn't find that. Try rephrasing.",
             source: data.source || "live",
             live: !!data.live,
           });
