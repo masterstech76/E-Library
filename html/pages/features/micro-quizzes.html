@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Micro-Quizzes — ReVena E-Library</title>
+  <meta name="description" content="Micro-Quizzes — 3-minute recall bursts for fast practice. Quick review in short study windows, boost recall speed, and perfect for on-the-go learning." />
+  <link rel="stylesheet" href="../../../css/micro-quizzes.css" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='40' fill='%239ae6ff'/%3E%3C/svg%3E" />
+</head>
+<body>
+
+  <!-- ===== BACKGROUND ===== -->
+  <div class="page-bg" aria-hidden="true">
+    <img src="../../../assets/images/Home.png" alt="Background" />
+  </div>
+
+  <!-- ===== TOAST CONTAINER ===== -->
+  <div id="toastContainer" class="toast-container" aria-live="polite"></div>
+
+  <!-- ===== HEADER ===== -->
+  <header class="mq-header">
+    <div class="mq-header-left">
+      <div class="mq-logo">
+        <canvas id="headerAtomicCanvas"></canvas>
+        <span>ReVena</span>
+      </div>
+      <nav class="mq-nav" aria-label="Micro-quizzes navigation">
+        <a href="../../index.html">Home</a>
+        <a href="textbook-library.html">Textbooks</a>
+        <a href="reference-books.html">Reference</a>
+        <a href="timed-mock-tests.html">Mock Tests</a>
+        <a href="#" class="active">Micro-Quizzes</a>
+        <a href="../account/profile.html">My Account</a>
+      </nav>
+    </div>
+    <div class="mq-header-right">
+      <button id="mqFullscreenBtn" class="mq-header-btn" title="Toggle fullscreen quiz">⛶ Focus Mode</button>
+    </div>
+  </header>
+
+  <div class="mq-page">
+
+    <!-- ===== BREADCRUMB ===== -->
+    <div class="mq-breadcrumb">
+      <a href="../../index.html">Home</a>
+      <span> › </span>
+      <span>Micro-Quizzes</span>
+    </div>
+
+    <!-- ===== HERO ===== -->
+    <section class="mq-hero">
+      <div class="mq-hero-text">
+        <span class="mq-badge">⚡ Quick Recall</span>
+        <h1><strong>Micro-Quizzes</strong></h1>
+        <p>3-minute recall bursts for fast practice. Perfect for spare-time study and on-the-go learning — boost recall speed and retention in short, focused windows.</p>
+        <div class="mq-start-actions">
+          <button id="mqHeroStartBtn" class="mq-btn mq-btn-primary">⚡ Start Micro-Quiz</button>
+        </div>
+      </div>
+      <div class="mq-hero-visual">
+        <span class="mq-icon-large">⚡</span>
+      </div>
+    </section>
+
+    <!-- ===== PURPOSE CARDS ===== -->
+    <section class="mq-purpose" aria-label="Why micro-quizzes">
+      <div class="mq-purpose-card">
+        <span class="pc-icon">⏱️</span>
+        <div>
+          <span class="pc-title">Quick Review Windows</span>
+          <span class="pc-desc">Short, focused bursts that fit into any study break.</span>
+        </div>
+      </div>
+      <div class="mq-purpose-card">
+        <span class="pc-icon">⚡</span>
+        <div>
+          <span class="pc-title">Boost Recall Speed</span>
+          <span class="pc-desc">Fast-paced questions sharpen your recall and reaction time.</span>
+        </div>
+      </div>
+      <div class="mq-purpose-card">
+        <span class="pc-icon">📱</span>
+        <div>
+          <span class="pc-title">On-the-Go Learning</span>
+          <span class="pc-desc">Perfect for spare-time study wherever you are.</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== QUICK START PANEL ===== -->
+    <section class="mq-start" id="mqStartPanel" aria-label="Configure micro-quiz">
+      <h2>🚀 Quick Start — 3-Minute Quiz</h2>
+      <div class="mq-start-grid">
+        <div class="mq-field">
+          <label for="mqSubject">Subject</label>
+          <select id="mqSubject">
+            <option value="math">Mathematics</option>
+            <option value="science">Science</option>
+            <option value="cs">Computer Science</option>
+            <option value="english">English</option>
+            <option value="history">History &amp; Civics</option>
+            <option value="commerce">Commerce</option>
+            <option value="mixed" selected>Mixed (All Subjects)</option>
+          </select>
+        </div>
+        <div class="mq-field">
+          <label for="mqDifficulty">Difficulty</label>
+          <select id="mqDifficulty">
+            <option value="easy">Easy</option>
+            <option value="medium" selected>Medium</option>
+            <option value="hard">Hard</option>
+          </select>
+        </div>
+        <div class="mq-field">
+          <label for="mqQuestions">Questions</label>
+          <select id="mqQuestions">
+            <option value="5">5 Questions</option>
+            <option value="10" selected>10 Questions</option>
+            <option value="15">15 Questions</option>
+          </select>
+        </div>
+      </div>
+      <div class="mq-start-actions">
+        <button id="mqStartBtn" class="mq-btn mq-btn-primary">⚡ Start 3-Minute Quiz</button>
+        <button id="mqResetBtn" class="mq-btn mq-btn-outline">↺ Reset</button>
+      </div>
+    </section>
+
+    <!-- ===== QUIZ MODE ===== -->
+    <section class="mq-quiz" id="mqQuizMode" aria-label="Quiz in progress">
+      <!-- Large timer -->
+      <div class="mq-timer-wrap">
+        <div class="mq-timer-label">⏱️ Time Remaining</div>
+        <div class="mq-timer-clock" id="mqTimerClock">3:00</div>
+        <div class="mq-progress-wrap">
+          <div class="mq-progress-top">
+            <span id="mqProgressLabel">0 / 10 answered</span>
+            <span id="mqProgressPct">0%</span>
+          </div>
+          <div class="mq-progress-track">
+            <div class="mq-progress-fill" id="mqProgressFill" style="width:0%;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stats row -->
+      <div class="mq-stats-row">
+        <span class="mq-stat-pill">🏆 Score: <strong id="mqScore">0</strong></span>
+        <span class="mq-stat-pill">🔥 Streak: <strong class="streak" id="mqStreak">0</strong></span>
+        <span class="mq-stat-pill">⚡ Speed: <strong id="mqSpeed">—</strong></span>
+      </div>
+
+      <!-- Question card -->
+      <div class="mq-question-card">
+        <div class="mq-q-top">
+          <span class="mq-q-topic" id="mqQTopic">Topic</span>
+          <span class="mq-q-counter" id="mqQCounter">Question 1 of 10</span>
+        </div>
+        <div class="mq-q-text" id="mqQText">Loading question...</div>
+        <div class="mq-options" id="mqOptions"></div>
+        <div class="mq-answer-input-wrap mq-hidden" id="mqInputWrap">
+          <input type="text" class="mq-answer-input" id="mqAnswerInput" placeholder="Type your answer..." />
+        </div>
+
+        <div class="mq-feedback" id="mqFeedback">
+          <div class="fb-title" id="mqFbTitle"></div>
+          <div class="fb-explain" id="mqFbExplain"></div>
+          <div class="fb-speed" id="mqFbSpeed"></div>
+        </div>
+
+        <div class="mq-next-btn mq-hidden" id="mqNextWrap">
+          <button id="mqNextBtn" class="mq-btn mq-btn-primary">Next Question →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== SUMMARY SCREEN ===== -->
+    <section class="mq-summary" id="mqSummarySection" aria-label="Quiz summary">
+      <div class="mq-summary-hero">
+        <h2 id="mqSummaryTitle">Round Complete! 🎉</h2>
+        <p class="mq-msg" id="mqSummaryMsg">Here's how your quick burst went.</p>
+        <div class="mq-summary-stats">
+          <div class="mq-summary-stat">
+            <span class="ms-number ms-correct" id="mqStatCorrect">0</span>
+            <span class="ms-label">Correct</span>
+          </div>
+          <div class="mq-summary-stat">
+            <span class="ms-number ms-wrong" id="mqStatWrong">0</span>
+            <span class="ms-label">Incorrect</span>
+          </div>
+          <div class="mq-summary-stat">
+            <span class="ms-number ms-skip" id="mqStatSkipped">0</span>
+            <span class="ms-label">Skipped</span>
+          </div>
+          <div class="mq-summary-stat">
+            <span class="ms-number" id="mqStatSpeed">—</span>
+            <span class="ms-label">Avg Speed</span>
+          </div>
+          <div class="mq-summary-stat">
+            <span class="ms-number" id="mqStatBestStreak">0</span>
+            <span class="ms-label">Best Streak</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Review mistakes -->
+      <div class="mq-mistakes">
+        <h2>📖 Review Your Mistakes</h2>
+        <div id="mqReviewList"></div>
+      </div>
+
+      <!-- Follow-up suggestions -->
+      <div class="mq-followup">
+        <h2>🧭 Suggested Follow-Up Practice</h2>
+        <div class="mq-followup-list" id="mqFollowupList"></div>
+      </div>
+
+      <div class="mq-summary-actions">
+        <button id="mqRetryBtn" class="mq-btn mq-btn-primary">🔄 Try Another Round</button>
+        <button id="mqReviewMistakesBtn" class="mq-btn mq-btn-outline">📖 Review Mistakes</button>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="site-footer" style="position:relative;z-index:1;">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <h3>ReVena</h3>
+        <p>AI-powered e-library platform designed to make studying smarter, more collaborative, and deeply engaging.</p>
+        <div class="footer-social">
+          <a href="#" aria-label="Twitter">𝕏</a>
+          <a href="#" aria-label="LinkedIn">in</a>
+          <a href="#" aria-label="GitHub">GH</a>
+          <a href="#" aria-label="YouTube">YT</a>
+        </div>
+      </div>
+      <div class="footer-links">
+        <div class="footer-col">
+          <h4>Platform</h4>
+          <a href="../../index.html#features-content">Smart Content</a>
+          <a href="../../index.html#features-ai">AI Features</a>
+          <a href="../../index.html#features-testing">Active Recall</a>
+          <a href="../../index.html#features-planning">Productivity</a>
+        </div>
+        <div class="footer-col">
+          <h4>Quick Links</h4>
+          <a href="../../index.html#features-content">Smart Content &amp; Delivery</a>
+          <a href="../../index.html#features-ai">AI &amp; Personalization</a>
+          <a href="../../index.html#features-testing">Active Recall &amp; Testing</a>
+          <a href="../../index.html#features-planning">Planning &amp; Productivity</a>
+          <a href="#">Help Center</a>
+        </div>
+        <div class="footer-col">
+          <h4>More</h4>
+          <a href="#">About Us</a>
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Service</a>
+          <a href="#">Accessibility</a>
+          <a href="#">Contact Support</a>
+        </div>
+        <div class="footer-col footer-highlights">
+          <h4>Highlights</h4>
+          <ul>
+            <li>♿ Accessibility First</li>
+            <li>🔒 Secure Cloud Storage</li>
+            <li>📱 Multi-Device Sync</li>
+            <li>🌙 Dark Mode</li>
+            <li>⚡ Offline Access</li>
+            <li>📊 Progress Reports</li>
+            <li>🔄 Auto Backup</li>
+            <li>🧠 Spaced Repetition</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 ReVena — Smart Exam E-Library Platform. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- ===== SCROLL TO TOP ===== -->
+  <button id="scrollTopBtn" class="scroll-top-btn" aria-label="Scroll to top">↑</button>
+
+  <!-- ===== SCRIPTS ===== -->
+  <script src="../../../js/shared.js"></script>
+  <script src="../../../js/micro-quizzes.js"></script>
+</body>
+</html>

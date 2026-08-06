@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Previous Year Question Papers — ReVena E-Library</title>
+  <meta name="description" content="Browse, download and upload previous year question papers. Access past exam papers across subjects, semesters, and universities." />
+  <link rel="stylesheet" href="../../../css/previous-year-papers.css" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='40' fill='%239ae6ff'/%3E%3C/svg%3E" />
+</head>
+<body>
+
+  <!-- ===== BACKGROUND ===== -->
+  <div class="page-bg" aria-hidden="true">
+    <img src="../../../assets/images/Home.png" alt="Background" />
+  </div>
+
+  <!-- ===== TOAST CONTAINER ===== -->
+  <div id="toastContainer" class="toast-container" aria-live="polite"></div>
+
+  <!-- ===== PAGE WRAPPER ===== -->
+  <div class="pyp-page">
+
+    <!-- ===== HEADER ===== -->
+    <header class="pyp-header">
+      <div class="pyp-header-left">
+        <div class="pyp-logo">
+          <canvas id="headerAtomicCanvas"></canvas>
+          <span>ReVena</span>
+        </div>
+        <nav class="pyp-nav" aria-label="Question papers navigation">
+          <a href="../../index.html">Home</a>
+          <a href="textbook-library.html">Textbooks</a>
+          <a href="reference-books.html">Reference</a>
+          <a href="#" class="active">Exam Papers</a>
+          <a href="#uploadSection">Upload</a>
+          <a href="../account/profile.html">My Account</a>
+        </nav>
+      </div>
+      <div class="pyp-search-bar">
+        <input type="text" id="globalSearchInput" class="form-control" placeholder="Search by subject, course code, year, or keywords..." />
+        <button id="globalSearchBtn" class="search-btn" aria-label="Search">🔍</button>
+      </div>
+    </header>
+
+    <!-- ===== BREADCRUMB ===== -->
+    <div class="pyp-breadcrumb">
+      <a href="../../index.html">Home</a>
+      <span> › </span>
+      <span>Previous Year Question Papers</span>
+    </div>
+
+    <!-- ===== SECTION HEADER ===== -->
+    <div class="pyp-section-header">
+      <h1>📄 <strong>Previous Year Question Papers</strong></h1>
+      <p>Access and download past exam papers from <strong>5th Standard to TY</strong> across all subjects, streams, and universities. Practice smarter with real exam papers.</p>
+      <div class="pyp-badge-row">
+        <span>📖 Midterm</span>
+        <span>📝 Final Exam</span>
+        <span>🧪 Practical</span>
+        <span>📊 Quarterly</span>
+        <span>📋 Half-Yearly</span>
+        <span>🎯 Model Test</span>
+        <span>🏫 All Boards</span>
+      </div>
+    </div>
+
+    <!-- ===== MOBILE FILTER TOGGLE ===== -->
+    <button id="mobileFilterToggle" class="pyp-mobile-filter-toggle">🔍 Show Filters</button>
+
+    <!-- ===== MAIN THREE-COLUMN LAYOUT ===== -->
+    <div class="pyp-main">
+
+      <!-- ===== LEFT SIDEBAR: FILTERS ===== -->
+      <aside class="pyp-sidebar-left" aria-label="Filters">
+
+        <!-- Subject -->
+        <div class="pyp-filter-group">
+          <h4>📚 Subject</h4>
+          <div id="subjectFilters">
+            <label class="pyp-filter-option">
+              <input type="radio" name="subjectFilter" value="all" checked />
+              <span class="filter-label">All Subjects</span>
+              <span class="filter-count" id="countAllSubjects">0</span>
+            </label>
+            <label class="pyp-filter-option">
+              <input type="radio" name="subjectFilter" value="math" />
+              <span class="filter-label">Mathematics</span>
+              <span class="filter-count" id="countMath">0</span>
+            </label>
+            <label class="pyp-filter-option">
+              <input type="radio" name="subjectFilter" value="physics" />
+              <span class="filter-label">Physics</span>
+              <span class="filter-count" id="countPhysics">0</span>
+            </label>
+            <label class="pyp-filter-option">
+              <input type="radio" name="subjectFilter" value="chemistry" />
+              <span class="filter-label">Chemistry</span>
+              <span class="filter-count" id="countChemistry">0</span>
+            </label>
+            <label class="pyp-filter-option">
+              <input type="radio" name="subjectFilter" value="biology" />
+              <span class="filter-label">Biology</span>
+              <span class="filter-count" id="countBiology">0</span>
+            </label>
+            <label class="pyp-filter-option">
+              <input type="radio" name="subjectFilter" value="cs" />
+              <span class="filter-label">Computer Science</span>
+              <span class="filter-count" id="countCs">0</span>
+            </label>
+            <label class="pyp-filter-option">
+              <input type="radio" name="subjectFilter" value="english" />
+              <span class="filter-label">English</span>
+              <span class="filter-count" id="countEnglish">0</span>
+            </label>
+            <label class="pyp-filter-option">
+              <input type="radio" name="subjectFilter" value="hindi" />
+              <span class="filter-label">Hindi</span>
+              <span class="filter-count" id="countHindi">0</span>
+            </label>
+            <label class="pyp-filter-option">
+              <input type="radio" name="subjectFilter" value="history" />
+              <span class="filter-label">History</span>
+              <span class="filter-count" id="countHistory">0</span>
+            </label>
+            <label class="pyp-filter-option">
+              <input type="radio" name="subjectFilter" value="economics" />
+              <span class="filter-label">Economics</span>
+              <span class="filter-count" id="countEconomics">0</span>
+            </label>
+            <label class="pyp-filter-option">
+              <input type="radio" name="subjectFilter" value="commerce" />
+              <span class="filter-label">Commerce</span>
+              <span class="filter-count" id="countCommerce">0</span>
+            </label>
+            <label class="pyp-filter-option">
+              <input type="radio" name="subjectFilter" value="accounting" />
+              <span class="filter-label">Accounting</span>
+              <span class="filter-count" id="countAccounting">0</span>
+            </label>
+            <label class="pyp-filter-option">
+              <input type="radio" name="subjectFilter" value="engineering" />
+              <span class="filter-label">Engineering</span>
+              <span class="filter-count" id="countEngineering">0</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Exam Type -->
+        <div class="pyp-filter-group">
+          <h4>📝 Exam Type</h4>
+          <div id="examTypeFilters">
+            <label class="pyp-filter-option">
+              <input type="radio" name="examTypeFilter" value="all" checked />
+              <span class="filter-label">All Types</span>
+            </label>
+            <label class="pyp-filter-option">
+              <input type="radio" name="examTypeFilter" value="midterm" />
+              <span class="filter-label">Midterm</span>
+            </label>
+            <label class="pyp-filter-option">
+              <input type="radio" name="examTypeFilter" value="final" />
+              <span class="filter-label">Final Exam</span>
+            </label>
+            <label class="pyp-filter-option">
+              <input type="radio" name="examTypeFilter" value="practical" />
+              <span class="filter-label">Practical</span>
+            </label>
+            <label class="pyp-filter-option">
+              <input type="radio" name="examTypeFilter" value="quarterly" />
+              <span class="filter-label">Quarterly</span>
+            </label>
+            <label class="pyp-filter-option">
+              <input type="radio" name="examTypeFilter" value="halfyearly" />
+              <span class="filter-label">Half-Yearly</span>
+            </label>
+            <label class="pyp-filter-option">
+              <input type="radio" name="examTypeFilter" value="model" />
+              <span class="filter-label">Model Test</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Year -->
+        <div class="pyp-filter-group">
+          <h4>📅 Year</h4>
+          <div id="yearFilters"></div>
+        </div>
+
+        <!-- Semester -->
+        <div class="pyp-filter-group">
+          <h4>📆 Semester</h4>
+          <div id="semesterFilters"></div>
+        </div>
+
+        <!-- University / Board -->
+        <div class="pyp-filter-group">
+          <h4>🏫 University / Board</h4>
+          <div id="universityFilters"></div>
+        </div>
+
+        <button class="pyp-filter-clear">✕ Clear All Filters</button>
+      </aside>
+
+      <!-- ===== CENTER PANEL ===== -->
+      <main class="pyp-center">
+
+        <!-- Subject Tabs -->
+        <div class="pyp-subject-tabs" id="subjectTabs"></div>
+
+        <!-- Exam Type Tabs -->
+        <div class="pyp-examtype-tabs" id="examTypeTabs" style="display:none;"></div>
+
+        <!-- Browse Header -->
+        <div class="pyp-section-header-row">
+          <h2>📄 Browse Question Papers</h2>
+          <div class="view-toggle">
+            <button id="viewGridBtn" class="active" title="Grid view">▦</button>
+            <button id="viewListBtn" title="List view">☰</button>
+          </div>
+        </div>
+
+        <!-- Results Count -->
+        <div class="pyp-results-count" id="resultsCount"></div>
+
+        <!-- Paper Grid -->
+        <div class="pyp-paper-grid" id="paperGrid"></div>
+
+        <!-- Pagination -->
+        <div class="pyp-pagination" id="pagination"></div>
+
+      </main>
+
+      <!-- ===== RIGHT SIDEBAR: QUICK ACCESS ===== -->
+      <aside class="pyp-sidebar-right" aria-label="Quick access">
+
+        <!-- Favorites -->
+        <div class="pyp-sidebar-card">
+          <h3>⭐ Favorites</h3>
+          <div id="favoritesList">
+            <p class="text-muted" style="font-size:0.78rem;">No favorites yet. Click 🔖 on any paper to add.</p>
+          </div>
+        </div>
+
+        <!-- Recently Viewed -->
+        <div class="pyp-sidebar-card">
+          <h3>🕐 Recently Viewed</h3>
+          <div id="recentlyViewed">
+            <p class="text-muted" style="font-size:0.78rem;">No recently viewed papers.</p>
+          </div>
+        </div>
+
+        <!-- Recommendations -->
+        <div class="pyp-sidebar-card">
+          <h3>🤖 Recommended for You</h3>
+          <div id="recommendations">
+            <p class="text-muted" style="font-size:0.78rem;">Loading recommendations...</p>
+          </div>
+        </div>
+
+      </aside>
+    </div>
+
+    <!-- ===== MOBILE FILTER OVERLAY ===== -->
+    <div id="mobileFilterOverlay" class="pyp-mobile-filter-overlay">
+      <button id="mobileFilterClose" class="filter-close">&times;</button>
+      <h2 style="color:var(--text-primary);margin-bottom:20px;font-weight:400;">🔍 Filters</h2>
+      <div class="pyp-filter-group">
+        <h4>📚 Subject</h4>
+        <label class="pyp-filter-option"><input type="radio" name="mSubjectFilter" value="all" checked /><span class="filter-label">All Subjects</span></label>
+        <label class="pyp-filter-option"><input type="radio" name="mSubjectFilter" value="math" /><span class="filter-label">Mathematics</span></label>
+        <label class="pyp-filter-option"><input type="radio" name="mSubjectFilter" value="physics" /><span class="filter-label">Physics</span></label>
+        <label class="pyp-filter-option"><input type="radio" name="mSubjectFilter" value="chemistry" /><span class="filter-label">Chemistry</span></label>
+        <label class="pyp-filter-option"><input type="radio" name="mSubjectFilter" value="biology" /><span class="filter-label">Biology</span></label>
+        <label class="pyp-filter-option"><input type="radio" name="mSubjectFilter" value="cs" /><span class="filter-label">Computer Science</span></label>
+        <label class="pyp-filter-option"><input type="radio" name="mSubjectFilter" value="english" /><span class="filter-label">English</span></label>
+        <label class="pyp-filter-option"><input type="radio" name="mSubjectFilter" value="hindi" /><span class="filter-label">Hindi</span></label>
+        <label class="pyp-filter-option"><input type="radio" name="mSubjectFilter" value="history" /><span class="filter-label">History</span></label>
+        <label class="pyp-filter-option"><input type="radio" name="mSubjectFilter" value="economics" /><span class="filter-label">Economics</span></label>
+        <label class="pyp-filter-option"><input type="radio" name="mSubjectFilter" value="commerce" /><span class="filter-label">Commerce</span></label>
+        <label class="pyp-filter-option"><input type="radio" name="mSubjectFilter" value="accounting" /><span class="filter-label">Accounting</span></label>
+        <label class="pyp-filter-option"><input type="radio" name="mSubjectFilter" value="engineering" /><span class="filter-label">Engineering</span></label>
+      </div>
+      <div class="pyp-filter-group">
+        <h4>📝 Exam Type</h4>
+        <label class="pyp-filter-option"><input type="radio" name="mExamTypeFilter" value="all" checked /><span class="filter-label">All Types</span></label>
+        <label class="pyp-filter-option"><input type="radio" name="mExamTypeFilter" value="midterm" /><span class="filter-label">Midterm</span></label>
+        <label class="pyp-filter-option"><input type="radio" name="mExamTypeFilter" value="final" /><span class="filter-label">Final Exam</span></label>
+        <label class="pyp-filter-option"><input type="radio" name="mExamTypeFilter" value="practical" /><span class="filter-label">Practical</span></label>
+        <label class="pyp-filter-option"><input type="radio" name="mExamTypeFilter" value="quarterly" /><span class="filter-label">Quarterly</span></label>
+        <label class="pyp-filter-option"><input type="radio" name="mExamTypeFilter" value="halfyearly" /><span class="filter-label">Half-Yearly</span></label>
+        <label class="pyp-filter-option"><input type="radio" name="mExamTypeFilter" value="model" /><span class="filter-label">Model Test</span></label>
+      </div>
+      <button class="pyp-filter-clear" style="margin-top:16px;">✕ Clear All Filters</button>
+    </div>
+
+    <!-- ===== EXTRA FEATURES BAR ===== -->
+    <div class="pyp-extra-features">
+      <div class="pyp-extra-card">
+        <span class="ef-icon">📝</span>
+        <div class="ef-info">
+          <span class="ef-title">Notes &amp; Highlights</span>
+          <span class="ef-desc">Annotate question papers as you practice</span>
+        </div>
+      </div>
+      <div class="pyp-extra-card">
+        <span class="ef-icon">🎯</span>
+        <div class="ef-info">
+          <span class="ef-title">Practice Mode</span>
+          <span class="ef-desc">Convert papers into timed mock tests</span>
+        </div>
+      </div>
+      <div class="pyp-extra-card">
+        <span class="ef-icon">📊</span>
+        <div class="ef-info">
+          <span class="ef-title">Analytics</span>
+          <span class="ef-desc">Track most downloaded/viewed papers</span>
+        </div>
+      </div>
+      <div class="pyp-extra-card">
+        <span class="ef-icon">🔔</span>
+        <div class="ef-info">
+          <span class="ef-title">Notifications</span>
+          <span class="ef-desc">Get alerts when new papers are uploaded</span>
+        </div>
+      </div>
+      <div class="pyp-extra-card">
+        <span class="ef-icon">♿</span>
+        <div class="ef-info">
+          <span class="ef-title">Accessibility Options</span>
+          <span class="ef-desc">Text-to-speech, font scaling, dark mode</span>
+        </div>
+      </div>
+      <div class="pyp-extra-card">
+        <span class="ef-icon">💡</span>
+        <div class="ef-info">
+          <span class="ef-title">Suggest a Paper</span>
+          <span class="ef-desc">Request missing question papers</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== UPLOAD SECTION ===== -->
+    <section id="uploadSection" class="pyp-upload-section">
+      <h2 class="section-title">📤 Upload Question Paper</h2>
+      <p class="section-subtitle">Contribute to the library — upload PDF/DOCX files of past exam papers for the community.</p>
+
+      <div class="pyp-upload-layout">
+        <!-- Drag & Drop Zone -->
+        <div>
+          <div id="dropZone" class="pyp-drop-zone">
+            <span class="dz-icon">📁</span>
+            <span class="dz-title">Drag &amp; Drop Files Here</span>
+            <span class="dz-subtitle">or click to browse</span>
+            <span class="dz-formats">Supported: PDF, DOCX (max 50 MB each)</span>
+            <input type="file" id="fileInput" accept=".pdf,.docx,.doc" multiple />
+          </div>
+          <p style="font-size:0.75rem; color:var(--text-muted); margin-top:8px; text-align:center;">
+            💡 Bulk upload supported — select multiple files at once (e.g., full semester set)
+          </p>
+        </div>
+
+        <!-- Metadata Form -->
+        <div class="pyp-upload-form">
+          <form id="uploadForm" novalidate>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Exam / Paper Title <span class="required">*</span></label>
+                <input type="text" class="form-control" placeholder="e.g. Mathematics Midterm 2025" id="uploadTitle" />
+              </div>
+              <div class="form-group">
+                <label>Course Code <span class="required">*</span></label>
+                <input type="text" class="form-control" placeholder="e.g. MTH101" id="uploadCourseCode" />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Subject <span class="required">*</span></label>
+                <select class="form-control" id="uploadSubject">
+                  <option value="">Select subject...</option>
+                  <option value="math">Mathematics</option>
+                  <option value="physics">Physics</option>
+                  <option value="chemistry">Chemistry</option>
+                  <option value="biology">Biology</option>
+                  <option value="cs">Computer Science</option>
+                  <option value="english">English</option>
+                  <option value="hindi">Hindi</option>
+                  <option value="history">History</option>
+                  <option value="economics">Economics</option>
+                  <option value="commerce">Commerce</option>
+                  <option value="accounting">Accounting</option>
+                  <option value="engineering">Engineering</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Exam Type <span class="required">*</span></label>
+                <select class="form-control" id="uploadExamType">
+                  <option value="">Select exam type...</option>
+                  <option value="midterm">Midterm</option>
+                  <option value="final">Final Exam</option>
+                  <option value="practical">Practical</option>
+                  <option value="quarterly">Quarterly</option>
+                  <option value="halfyearly">Half-Yearly</option>
+                  <option value="model">Model Test</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Year <span class="required">*</span></label>
+                <select class="form-control" id="uploadYear">
+                  <option value="">Select year...</option>
+                  <option value="2026">2026</option>
+                  <option value="2025">2025</option>
+                  <option value="2024">2024</option>
+                  <option value="2023">2023</option>
+                  <option value="2022">2022</option>
+                  <option value="2021">2021</option>
+                  <option value="2020">2020</option>
+                  <option value="2019">2019</option>
+                  <option value="2018">2018</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Semester <span class="required">*</span></label>
+                <select class="form-control" id="uploadSemester">
+                  <option value="">Select semester...</option>
+                  <option value="Semester 1">Semester 1</option>
+                  <option value="Semester 2">Semester 2</option>
+                  <option value="Semester 3">Semester 3</option>
+                  <option value="Semester 4">Semester 4</option>
+                  <option value="Semester 5">Semester 5</option>
+                  <option value="Semester 6">Semester 6</option>
+                  <option value="Semester 7">Semester 7</option>
+                  <option value="Semester 8">Semester 8</option>
+                  <option value="Annual">Annual</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>University / Board</label>
+                <select class="form-control" id="uploadUniversity">
+                  <option value="">Select board/university...</option>
+                  <option value="CBSE">CBSE</option>
+                  <option value="ICSE">ICSE</option>
+                  <option value="Maharashtra Board">Maharashtra Board</option>
+                  <option value="Uttar Pradesh Board">Uttar Pradesh Board</option>
+                  <option value="Tamil Nadu Board">Tamil Nadu Board</option>
+                  <option value="Karnataka Board">Karnataka Board</option>
+                  <option value="Mumbai University">Mumbai University</option>
+                  <option value="Delhi University">Delhi University</option>
+                  <option value="VTU">VTU</option>
+                  <option value="JNTU">JNTU</option>
+                  <option value="AKTU">AKTU</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Tags / Keywords</label>
+                <input type="text" class="form-control" placeholder="e.g. algebra, calculus, IIT-JEE" id="uploadTags" />
+              </div>
+            </div>
+
+            <!-- Copyright confirmation -->
+            <label class="pyp-upload-checkbox">
+              <input type="checkbox" id="copyrightCheck" />
+              <span class="check-text">
+                I confirm that I have the right to upload this question paper and it complies with copyright and licensing requirements. <span class="required">*</span>
+              </span>
+            </label>
+
+<!-- Actions -->
+            <div class="pyp-upload-actions">
+              <button type="button" id="previewBtn" class="btn btn-secondary">👁️ Preview</button>
+              <button type="button" id="submitUploadBtn" class="btn btn-primary">📤 Publish to Library</button>
+            </div>
+            <p style="font-size:0.72rem; color:var(--text-muted); margin-top:8px;">
+              Your question paper is added to the library instantly and is available to all students.
+            </p>
+          </form>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="site-footer" style="position:relative;z-index:1;">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <h3>ReVena</h3>
+        <p>AI-powered e-library platform designed to make studying smarter, more collaborative, and deeply engaging.</p>
+        <div class="footer-social">
+          <a href="#" aria-label="Twitter">𝕏</a>
+          <a href="#" aria-label="LinkedIn">in</a>
+          <a href="#" aria-label="GitHub">GH</a>
+          <a href="#" aria-label="YouTube">YT</a>
+        </div>
+      </div>
+      <div class="footer-links">
+        <div class="footer-col">
+          <h4>Platform</h4>
+          <a href="../../index.html#features-content">Smart Content</a>
+          <a href="../../index.html#features-ai">AI Features</a>
+          <a href="../../index.html#features-testing">Active Recall</a>
+          <a href="../../index.html#features-planning">Productivity</a>
+        </div>
+        <div class="footer-col">
+          <h4>Quick Links</h4>
+          <a href="../../index.html#features-content">Smart Content &amp; Delivery</a>
+          <a href="../../index.html#features-ai">AI &amp; Personalization</a>
+          <a href="../../index.html#features-testing">Active Recall &amp; Testing</a>
+          <a href="../../index.html#features-planning">Planning &amp; Productivity</a>
+          <a href="#">Help Center</a>
+        </div>
+        <div class="footer-col">
+          <h4>More</h4>
+          <a href="#">About Us</a>
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Service</a>
+          <a href="#">Accessibility</a>
+          <a href="#">Contact Support</a>
+        </div>
+        <div class="footer-col footer-highlights">
+          <h4>Highlights</h4>
+          <ul>
+            <li>♿ Accessibility First</li>
+            <li>🔒 Secure Cloud Storage</li>
+            <li>📱 Multi-Device Sync</li>
+            <li>🌙 Dark Mode</li>
+            <li>⚡ Offline Access</li>
+            <li>📊 Progress Reports</li>
+            <li>🔄 Auto Backup</li>
+            <li>🧠 Spaced Repetition</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 ReVena — Smart Exam E-Library Platform. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- ===== SCROLL TO TOP ===== -->
+  <button id="scrollTopBtn" class="scroll-top-btn" aria-label="Scroll to top">↑</button>
+
+  <!-- ===== SCRIPTS ===== -->
+  <script src="../../../js/shared.js"></script>
+  <script src="../../../js/previous-year-papers.js"></script>
+</body>
+</html>

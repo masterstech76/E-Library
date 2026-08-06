@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ReVena — Smart Exam E-Library Platform</title>
+  <meta name="description" content="ReVena is an AI-powered e-library with 50+ study features: adaptive quizzes, video lectures, collaborative study groups, and personalized learning analytics." />
+  <link rel="stylesheet" href="../css/home.css" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='40' fill='%239ae6ff'/%3E%3C/svg%3E" />
+</head>
+<body>
+
+  <!-- ===== BACKGROUND ===== -->
+  <div class="page-bg" aria-hidden="true">
+    <img src="../assets/images/Home.png" alt="Background" />
+  </div>
+
+  <!-- ===== STICKY HEADER (shrinks on scroll) ===== -->
+  <header id="siteHeader" class="site-header">
+    <div class="header-inner">
+      <div class="header-logo">
+        <canvas id="headerAtomicCanvas"></canvas>
+        <span class="header-brand">ReVena</span>
+      </div>
+<nav class="header-nav" aria-label="Main navigation">
+        <a href="#features-content">Study</a>
+        <a href="#features-ai">AI</a>
+        <a href="#features-testing">Practice</a>
+        <a href="#features-planning">Plan</a>
+        <a href="pages/account/settings.html" class="nav-icon-link" title="Settings">⚙️</a>
+      </nav>
+      <button type="button" class="mobile-menu-toggle" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ===== MOBILE MENU OVERLAY ===== -->
+  <div id="mobileMenu" class="mobile-menu">
+    <button type="button" class="mobile-menu-close" id="mobileMenuClose" aria-label="Close menu">&times;</button>
+    <nav>
+      <a href="#features-content">Smart Content &amp; Delivery</a>
+      <a href="#features-ai">AI &amp; Personalization</a>
+      <a href="#features-testing">Active Recall &amp; Testing</a>
+      <a href="#features-planning">Planning &amp; Productivity</a>
+    </nav>
+  </div>
+
+  <!-- ===== HERO SECTION ===== -->
+  <section class="hero" id="hero">
+    <div class="hero-bg-logo" id="heroBgLogo">
+      <canvas id="heroAtomicCanvas"></canvas>
+    </div>
+    <div class="hero-content">
+      <div class="hero-badge">🚀 Smart Exam Platform</div>
+      <h1 class="hero-title">
+        Your<br />
+        <span class="gradient-text">AI-Powered</span><br />
+        Study Universe
+      </h1>
+      <p class="hero-subtitle">
+        50+ intelligent features — from AI summarization and adaptive quizzes to collaborative study groups and gamified learning — all in one place.
+      </p>
+
+      <!-- Hero Top-5 Feature Highlights -->
+      <div class="hero-highlights">
+        <a href="pages/features/textbook-library.html" class="hero-highlight-card" style="text-decoration:none;">
+          <span class="hh-icon">📚</span>
+          <span class="hh-text">Textbook Library</span>
+        </a>
+        <div class="hero-highlight-card">
+          <span class="hh-icon">💬</span>
+          <span class="hh-text">AI Doubt Solver</span>
+        </div>
+        <div class="hero-highlight-card">
+          <span class="hh-icon">⏱️</span>
+          <span class="hh-text">Timed Mock Tests</span>
+        </div>
+        <div class="hero-highlight-card">
+          <span class="hh-icon">📅</span>
+          <span class="hh-text">Personalized Planner</span>
+        </div>
+        <div class="hero-highlight-card">
+          <span class="hh-icon">▶️</span>
+          <span class="hh-text">Interactive Video Player</span>
+        </div>
+      </div>
+
+      <div class="hero-actions">
+        <a href="#features-content" class="btn btn-secondary btn-lg">Explore Features ↓</a>
+      </div>
+
+      <div class="hero-stats">
+        <div class="stat-item">
+          <span class="stat-number" data-count="50">0</span>
+          <span class="stat-label">+ Features</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number" data-count="100">0</span>
+          <span class="stat-label">% AI-Powered</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number" data-count="24">0</span>
+          <span class="stat-label">/7 Support</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== MAIN FEATURES CONTAINER ===== -->
+  <main class="features-container">
+
+    <!-- ===== CATEGORY 1: CONTENT LIBRARY & DELIVERY ===== -->
+    <section class="feature-category" id="features-content">
+      <div class="category-header">
+        <span class="category-icon">📚</span>
+        <h2>Content Library &amp; Delivery</h2>
+        <p>Core resources and how they are presented</p>
+      </div>
+      <div class="features-grid">
+<a href="pages/features/textbook-library.html" class="feature-card" data-delay="0" style="text-decoration:none; display:block;">
+          <div class="fc-icon">📚</div>
+          <h3>Textbook Library</h3>
+          <p>Digital library with online reading, annotations &amp; chapter navigation.</p>
+        </a>
+        <div class="feature-card" data-delay="1">
+          <div class="fc-icon">📖</div>
+          <h3>Reference Books</h3>
+          <p>Supplementary materials, guides &amp; reference links.</p>
+        </div>
+        <div class="feature-card" data-delay="2">
+          <div class="fc-icon">📄</div>
+          <h3>Class Notes Upload</h3>
+          <p>Upload PDF/Text notes with AI-powered summaries.</p>
+        </div>
+        <div class="feature-card" data-delay="3">
+          <div class="fc-icon">🎬</div>
+          <h3>Classroom Video Lectures</h3>
+          <p>Organized by subject for recorded sessions.</p>
+        </div>
+        <div class="feature-card" data-delay="4">
+          <div class="fc-icon">🎥</div>
+          <h3>Video Study Tutorials</h3>
+          <p>Downloadable tutorials with 29-day offline access.</p>
+        </div>
+        <div class="feature-card" data-delay="5">
+          <div class="fc-icon">📜</div>
+          <h3>Previous Year Papers</h3>
+          <p>Searchable archive of past exam papers.</p>
+        </div>
+        <div class="feature-card" data-delay="6">
+          <div class="fc-icon">📌</div>
+          <h3>Sticky Notes</h3>
+          <p>Color-coded quick notes for rapid idea capture.</p>
+        </div>
+        <div class="feature-card" data-delay="7">
+          <div class="fc-icon">▶️</div>
+          <h3>Interactive Video Player</h3>
+          <p>Smart chapter markers &amp; search.</p>
+        </div>
+        <div class="feature-card" data-delay="8">
+          <div class="fc-icon">🎙️</div>
+          <h3>Audio-to-Text Transcripts</h3>
+          <p>Convert recordings to searchable text.</p>
+        </div>
+        <div class="feature-card" data-delay="9">
+          <div class="fc-icon">📄</div>
+          <h3>One-Page Summaries</h3>
+          <p>Condense chapters into quick revision docs.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== CATEGORY 2: AI & PERSONALIZATION ===== -->
+    <section class="feature-category" id="features-ai">
+      <div class="category-header">
+        <span class="category-icon">🤖</span>
+        <h2>AI &amp; Personalization</h2>
+        <p>Smart engines that adapt to the student</p>
+      </div>
+      <div class="features-grid">
+        <div class="feature-card" data-delay="0">
+          <div class="fc-icon">💬</div>
+          <h3>AI Doubt Solver</h3>
+          <p>Instant Q&amp;A chatbot for study help.</p>
+        </div>
+        <div class="feature-card" data-delay="1">
+          <div class="fc-icon">➗</div>
+          <h3>Maths/Science AI Tutor</h3>
+          <p>Step-by-step problem solving for math &amp; science.</p>
+        </div>
+        <div class="feature-card" data-delay="2">
+          <div class="fc-icon">🧠</div>
+          <h3>AI Summarization</h3>
+          <p>Condense long notes into concise summaries.</p>
+        </div>
+        <div class="feature-card" data-delay="3">
+          <div class="fc-icon">🔄</div>
+          <h3>Adaptive Spaced Repetition</h3>
+          <p>Optimized memory retention engine.</p>
+        </div>
+        <div class="feature-card" data-delay="4">
+          <div class="fc-icon">🔥</div>
+          <h3>Weakness Heatmap</h3>
+          <p>Visual weak-area analysis across subjects.</p>
+        </div>
+        <div class="feature-card" data-delay="5">
+          <div class="fc-icon">🗺️</div>
+          <h3>Personalized Study Path</h3>
+          <p>Custom AI study roadmap.</p>
+        </div>
+        <div class="feature-card" data-delay="6">
+          <div class="fc-icon">📈</div>
+          <h3>Predicted Score Tracker</h3>
+          <p>AI exam score predictions.</p>
+        </div>
+        <div class="feature-card" data-delay="7">
+          <div class="fc-icon">💡</div>
+          <h3>Smart Recommendations</h3>
+          <p>Personalized resource suggestions.</p>
+        </div>
+        <div class="feature-card" data-delay="8">
+          <div class="fc-icon">🔍</div>
+          <h3>Exam Pattern Analyzer</h3>
+          <p>Past paper trend analysis.</p>
+        </div>
+        <div class="feature-card" data-delay="9">
+          <div class="fc-icon">♿</div>
+          <h3>Accessibility First</h3>
+          <p>Screen readers, font scaling, and color contrast.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== CATEGORY 3: ACTIVE RECALL & TESTING ===== -->
+    <section class="feature-category" id="features-testing">
+      <div class="category-header">
+        <span class="category-icon">🎯</span>
+        <h2>Active Recall &amp; Testing</h2>
+        <p>Tools to test knowledge and track mistakes</p>
+      </div>
+      <div class="features-grid">
+        <div class="feature-card" data-delay="0">
+          <div class="fc-icon">⏱️</div>
+          <h3>Timed Mock Tests</h3>
+          <p>Full-length timed exam simulations.</p>
+        </div>
+        <div class="feature-card" data-delay="1">
+          <div class="fc-icon">⚡</div>
+          <h3>Adaptive Quizzes</h3>
+          <p>Real-time difficulty adjustment.</p>
+        </div>
+        <div class="feature-card" data-delay="2">
+          <div class="fc-icon">📅</div>
+          <h3>Daily Study Quiz</h3>
+          <p>Short personalized daily quizzes.</p>
+        </div>
+        <div class="feature-card" data-delay="3">
+          <div class="fc-icon">⚡</div>
+          <h3>Micro-Quizzes</h3>
+          <p>Quick-fire 3-minute knowledge tests.</p>
+        </div>
+        <div class="feature-card" data-delay="4">
+          <div class="fc-icon">📓</div>
+          <h3>Error Log / Mistake Journal</h3>
+          <p>Auto-logged mistakes for review.</p>
+        </div>
+        <div class="feature-card" data-delay="5">
+          <div class="fc-icon">🃏</div>
+          <h3>Flashcard Generator</h3>
+          <p>Auto-create flashcards for active recall.</p>
+        </div>
+        <div class="feature-card" data-delay="6">
+          <div class="fc-icon">🔤</div>
+          <h3>Fill-in-the-Blank Cloze</h3>
+          <p>Active recall from notes.</p>
+        </div>
+        <div class="feature-card" data-delay="7">
+          <div class="fc-icon">✅</div>
+          <h3>Instant Feedback</h3>
+          <p>Detailed answer explanations.</p>
+        </div>
+        <div class="feature-card" data-delay="8">
+          <div class="fc-icon">🏆</div>
+          <h3>Daily Challenges</h3>
+          <p>Mini tasks for consistent learning.</p>
+        </div>
+        <div class="feature-card" data-delay="9">
+          <div class="fc-icon">📚</div>
+          <h3>Subject-Wise Drill</h3>
+          <p>Focused topic-level practice.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== CATEGORY 4: PLANNING, PRODUCTIVITY & GAMIFICATION ===== -->
+    <section class="feature-category" id="features-planning">
+      <div class="category-header">
+        <span class="category-icon">📅</span>
+        <h2>Planning, Productivity &amp; Gamification</h2>
+        <p>Organization, tracking, and motivation</p>
+      </div>
+      <div class="features-grid">
+        <div class="feature-card" data-delay="0">
+          <div class="fc-icon">📅</div>
+          <h3>Personalized Planner</h3>
+          <p>AI-generated study schedules.</p>
+        </div>
+        <div class="feature-card" data-delay="1">
+          <div class="fc-icon">🍅</div>
+          <h3>Pomodoro Timer</h3>
+          <p>Focus timing + session analytics.</p>
+        </div>
+        <div class="feature-card" data-delay="2">
+          <div class="fc-icon">⏰</div>
+          <h3>Deadline Countdown</h3>
+          <p>Visual exam/assignment countdowns.</p>
+        </div>
+        <div class="feature-card" data-delay="3">
+          <div class="fc-icon">🎯</div>
+          <h3>Weekly Study Goals</h3>
+          <p>Auto-generated weekly targets.</p>
+        </div>
+        <div class="feature-card" data-delay="4">
+          <div class="fc-icon">📝</div>
+          <h3>Study Session Logger</h3>
+          <p>Auto-log sessions with duration/subject.</p>
+        </div>
+        <div class="feature-card" data-delay="5">
+          <div class="fc-icon">🔔</div>
+          <h3>Smart Notifications</h3>
+          <p>Exam reminders, weak topic alerts &amp; study nudges.</p>
+        </div>
+        <div class="feature-card" data-delay="6">
+          <div class="fc-icon">🏆</div>
+          <h3>Leaderboards</h3>
+          <p>Rankings based on quiz scores &amp; study hours.</p>
+        </div>
+        <div class="feature-card" data-delay="7">
+          <div class="fc-icon">🎖️</div>
+          <h3>Achievement Certificates</h3>
+          <p>Downloadable milestone certificates.</p>
+        </div>
+        <div class="feature-card" data-delay="8">
+          <div class="fc-icon">🔒</div>
+          <h3>Secure Cloud Storage</h3>
+          <p>Data safety and multi-device sync.</p>
+        </div>
+        <div class="feature-card" data-delay="9">
+          <div class="fc-icon">🌐</div>
+          <h3>Offline Access</h3>
+          <p>Download content for study without Wi-Fi.</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===== CTA BANNER ===== -->
+  <section class="cta-banner">
+    <div class="cta-inner">
+      <h2>Ready to Transform Your Learning?</h2>
+      <p>Join thousands of students already using ReVena to study smarter, not harder.</p>
+      <div class="cta-actions">
+        <a href="#features-content" class="btn btn-primary btn-lg">Start Exploring Features →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <h3>ReVena</h3>
+        <p>AI-powered e-library platform designed to make studying smarter, more collaborative, and deeply engaging.</p>
+        <div class="footer-social">
+          <a href="#" aria-label="Twitter">𝕏</a>
+          <a href="#" aria-label="LinkedIn">in</a>
+          <a href="#" aria-label="GitHub">GH</a>
+          <a href="#" aria-label="YouTube">YT</a>
+        </div>
+      </div>
+      <div class="footer-links">
+        <div class="footer-col">
+          <h4>Platform</h4>
+          <a href="#features-content">Smart Content</a>
+          <a href="#features-ai">AI Features</a>
+          <a href="#features-testing">Active Recall</a>
+          <a href="#features-planning">Productivity</a>
+        </div>
+        <div class="footer-col">
+          <h4>Quick Links</h4>
+          <a href="#features-content">Smart Content &amp; Delivery</a>
+          <a href="#features-ai">AI &amp; Personalization</a>
+          <a href="#features-testing">Active Recall &amp; Testing</a>
+          <a href="#features-planning">Planning &amp; Productivity</a>
+          <a href="#">Help Center</a>
+        </div>
+        <div class="footer-col">
+          <h4>More</h4>
+          <a href="#">About Us</a>
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Service</a>
+          <a href="#">Accessibility</a>
+          <a href="#">Contact Support</a>
+        </div>
+        <div class="footer-col footer-highlights">
+          <h4>Highlights</h4>
+          <ul>
+            <li>♿ Accessibility First</li>
+            <li>🔒 Secure Cloud Storage</li>
+            <li>📱 Multi-Device Sync</li>
+            <li>🌙 Dark Mode</li>
+            <li>⚡ Offline Access</li>
+            <li>📊 Progress Reports</li>
+            <li>🔄 Auto Backup</li>
+            <li>🧠 Spaced Repetition</li>
+          </ul>
+        </div>
+    </div>
+  </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 ReVena — Smart Exam E-Library Platform. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- ===== SCROLL TO TOP ===== -->
+  <button id="scrollTopBtn" class="scroll-top-btn" aria-label="Scroll to top">↑</button>
+
+  <!-- ===== SCRIPTS ===== -->
+  <script src="../js/home.js"></script>
+</body>
+</html>
+

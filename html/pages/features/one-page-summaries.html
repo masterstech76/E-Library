@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>One-Page Summaries — ReVena E-Library</title>
+  <meta name="description" content="Condense chapters into quick revision docs. One-page chapter summaries with key facts, formulas, definitions, and exam tips for fast revision." />
+  <link rel="stylesheet" href="../../../css/one-page-summaries.css" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='40' fill='%239ae6ff'/%3E%3C/svg%3E" />
+</head>
+<body>
+
+  <!-- ===== BACKGROUND ===== -->
+  <div class="page-bg" aria-hidden="true">
+    <img src="../../../assets/images/Home.png" alt="Background" />
+  </div>
+
+  <!-- ===== TOAST CONTAINER ===== -->
+  <div id="toastContainer" class="toast-container" aria-live="polite"></div>
+
+  <!-- ===== PAGE WRAPPER ===== -->
+  <div class="ops-page">
+
+    <!-- ===== HEADER ===== -->
+    <header class="ops-header">
+      <div class="ops-header-left">
+        <div class="ops-logo">
+          <canvas id="headerAtomicCanvas"></canvas>
+          <span>ReVena</span>
+        </div>
+        <nav class="ops-nav" aria-label="One-page summaries navigation">
+          <a href="../../index.html">Home</a>
+          <a href="textbook-library.html">Textbooks</a>
+          <a href="reference-books.html">Reference</a>
+          <a href="#" class="active">Summaries</a>
+          <a href="video-lectures.html">Lectures</a>
+          <a href="../account/profile.html">My Account</a>
+        </nav>
+      </div>
+      <div class="ops-search-bar">
+        <input type="text" id="globalSearchInput" class="form-control" placeholder="Search summaries, chapters, or keywords..." />
+        <button id="globalSearchBtn" class="search-btn" aria-label="Search">🔍</button>
+      </div>
+    </header>
+
+    <!-- ===== BREADCRUMB ===== -->
+    <div class="ops-breadcrumb">
+      <a href="../../index.html">Home</a>
+      <span> › </span>
+      <span>One-Page Summaries</span>
+    </div>
+
+    <!-- ===== SECTION HEADER ===== -->
+    <div class="ops-section-header">
+      <h1>📄 <strong>One-Page Summaries</strong></h1>
+      <p>Condense chapters into quick revision docs — key facts, formulas, definitions, and exam tips at a glance. Perfect for last-minute revision and quick refresh.</p>
+      <div class="ops-badge-row">
+        <span>📐 Mathematics</span>
+        <span>🔬 Physics</span>
+        <span>🧪 Chemistry</span>
+        <span>🧬 Biology</span>
+        <span>💻 Computer Science</span>
+        <span>📊 Economics</span>
+        <span>📦 Commerce</span>
+        <span>📜 History</span>
+      </div>
+    </div>
+
+    <!-- ===== PROGRESS BAR ===== -->
+    <div class="ops-progress-bar-wrapper">
+      <div class="ops-progress-label">
+        <span>📊 Revision Progress</span>
+        <span id="progressPercentage">0%</span>
+      </div>
+      <div class="ops-progress-track">
+        <div class="ops-progress-fill" id="progressFill" style="width:0%;"></div>
+      </div>
+    </div>
+
+    <!-- ===== MAIN LAYOUT ===== -->
+    <div class="ops-main">
+
+      <!-- ===== LEFT SIDEBAR: CHAPTER NAVIGATION ===== -->
+      <aside class="ops-sidebar-left" aria-label="Chapter navigation">
+        <div class="ops-sidebar-card">
+          <h3>📚 Subjects</h3>
+          <div class="ops-subject-nav" id="subjectNav"></div>
+        </div>
+
+        <div class="ops-sidebar-card">
+          <h3>🎯 Quick Actions</h3>
+          <button class="ops-cta-btn" id="startRevisionBtn">🚀 Start Revising Now</button>
+          <button class="ops-cta-btn-outline" id="printAllBtn">🖨️ Print All Summaries</button>
+          <button class="ops-cta-btn-outline" id="downloadPdfBtn">📄 Download as PDF</button>
+        </div>
+      </aside>
+
+      <!-- ===== CENTER CONTENT ===== -->
+      <div class="ops-center">
+
+        <!-- ===== SUBJECT FILTER TABS ===== -->
+        <div class="ops-subject-tabs" id="subjectTabs"></div>
+
+        <!-- ===== CHAPTER SELECTION DROPDOWN ===== -->
+        <select class="ops-chapter-select" id="chapterSelect">
+          <option value="all">All Chapters</option>
+        </select>
+
+        <!-- ===== RESULTS COUNT ===== -->
+        <div class="ops-results-count" id="resultsCount"></div>
+
+        <!-- ===== BROWSE HEADER ===== -->
+        <div class="ops-section-header-row">
+          <h2>📖 Chapter Summaries</h2>
+          <div class="view-toggle">
+            <button id="viewVisualBtn" class="active" title="Visual mode">🎨 Visual</button>
+            <button id="viewTextBtn" title="Text-only mode">📝 Text Only</button>
+          </div>
+        </div>
+
+        <!-- ===== SUMMARY GRID ===== -->
+        <div class="ops-summary-grid" id="summaryGrid"></div>
+
+      </div>
+
+      <!-- ===== RIGHT SIDEBAR ===== -->
+      <aside class="ops-sidebar-right" aria-label="Quick access">
+
+        <!-- Favorites -->
+        <div class="ops-sidebar-card">
+          <h3>⭐ Favorites</h3>
+          <div id="favoritesList">
+            <p class="text-muted" style="font-size:0.78rem;">No favorites yet. Click ⭐ on any summary to save.</p>
+          </div>
+        </div>
+
+        <!-- Covered Chapters -->
+        <div class="ops-sidebar-card">
+          <h3>✅ Covered</h3>
+          <div id="coveredList">
+            <p class="text-muted" style="font-size:0.78rem;">No chapters covered yet. Mark summaries as done to track progress.</p>
+          </div>
+        </div>
+
+        <!-- Revision Tips -->
+        <div class="ops-sidebar-card">
+          <h3>💡 Revision Tips</h3>
+          <div class="ops-tips-list">
+            <div class="ops-tip-item">
+              <span class="tip-bullet">✦</span>
+              <span>Review the "What to Remember" box first for key takeaways.</span>
+            </div>
+            <div class="ops-tip-item">
+              <span class="tip-bullet">✦</span>
+              <span>Use the revision checklist to track your progress.</span>
+            </div>
+            <div class="ops-tip-item">
+              <span class="tip-bullet">✦</span>
+              <span>Focus on formulas and definitions — they carry the most marks.</span>
+            </div>
+            <div class="ops-tip-item">
+              <span class="tip-bullet">✦</span>
+              <span>Read the exam tips section before attempting practice tests.</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- CTA -->
+        <div class="ops-sidebar-card">
+          <button class="ops-cta-btn" id="chooseChapterBtn">📖 Choose a Chapter</button>
+          <button class="ops-cta-btn-outline" id="printSummaryBtn">🖨️ Print Summary</button>
+        </div>
+
+      </aside>
+    </div>
+
+    <!-- ===== EXTRA FEATURES BAR ===== -->
+    <div class="ops-extra-features">
+      <div class="ops-extra-card" id="downloadPdfExtra">
+        <span class="ef-icon">📄</span>
+        <div class="ef-info">
+          <span class="ef-title">Download as PDF</span>
+          <span class="ef-desc">Save summaries as a printable PDF document</span>
+        </div>
+      </div>
+      <div class="ops-extra-card" id="printExtra">
+        <span class="ef-icon">🖨️</span>
+        <div class="ef-info">
+          <span class="ef-title">Print Version</span>
+          <span class="ef-desc">Print summaries in a clean, printer-friendly format</span>
+        </div>
+      </div>
+      <div class="ops-extra-card" id="saveFavExtra">
+        <span class="ef-icon">⭐</span>
+        <div class="ef-info">
+          <span class="ef-title">Save Favorites</span>
+          <span class="ef-desc">Bookmark your most-used chapter summaries</span>
+        </div>
+      </div>
+      <div class="ops-extra-card" id="shareExtra">
+        <span class="ef-icon">🔗</span>
+        <div class="ef-info">
+          <span class="ef-title">Share Summary Link</span>
+          <span class="ef-desc">Copy a shareable link to any chapter summary</span>
+        </div>
+      </div>
+      <div class="ops-extra-card" id="toggleModeExtra">
+        <span class="ef-icon">🎨</span>
+        <div class="ef-info">
+          <span class="ef-title">Toggle Mode</span>
+          <span class="ef-desc">Switch between text-only and visual mode</span>
+        </div>
+      </div>
+      <div class="ops-extra-card" id="resetProgressExtra">
+        <span class="ef-icon">🔄</span>
+        <div class="ef-info">
+          <span class="ef-title">Reset Progress</span>
+          <span class="ef-desc">Clear all covered marks and start fresh</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ===== SHARE MODAL ===== -->
+  <div id="shareModal" class="ops-modal-overlay">
+    <div class="ops-modal">
+      <div class="ops-modal-header">
+        <h2>🔗 Share Summary Link</h2>
+        <button class="ops-modal-close" data-close-modal="shareModal">&times;</button>
+      </div>
+      <div class="ops-modal-body">
+        <p style="font-size:0.85rem; color:var(--text-secondary); margin-bottom:12px; line-height:1.6;">
+          Copy the link below to share this chapter summary with your friends and classmates.
+        </p>
+        <div class="ops-share-link-box">
+          <input type="text" id="shareLinkInput" readonly value="" />
+          <button id="copyShareLinkBtn">📋 Copy</button>
+        </div>
+        <p style="font-size:0.72rem; color:var(--text-muted);">
+          The link will open the summary directly on the One-Page Summaries page.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="site-footer" style="position:relative;z-index:1;">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <h3>ReVena</h3>
+        <p>AI-powered e-library platform designed to make studying smarter, more collaborative, and deeply engaging.</p>
+        <div class="footer-social">
+          <a href="#" aria-label="Twitter">𝕏</a>
+          <a href="#" aria-label="LinkedIn">in</a>
+          <a href="#" aria-label="GitHub">GH</a>
+          <a href="#" aria-label="YouTube">YT</a>
+        </div>
+      </div>
+      <div class="footer-links">
+        <div class="footer-col">
+          <h4>Platform</h4>
+          <a href="../../index.html#features-content">Smart Content</a>
+          <a href="../../index.html#features-ai">AI Features</a>
+          <a href="../../index.html#features-testing">Active Recall</a>
+          <a href="../../index.html#features-planning">Productivity</a>
+        </div>
+        <div class="footer-col">
+          <h4>Quick Links</h4>
+          <a href="../../index.html#features-content">Smart Content &amp; Delivery</a>
+          <a href="../../index.html#features-ai">AI &amp; Personalization</a>
+          <a href="../../index.html#features-testing">Active Recall &amp; Testing</a>
+          <a href="../../index.html#features-planning">Planning &amp; Productivity</a>
+          <a href="#">Help Center</a>
+        </div>
+        <div class="footer-col">
+          <h4>More</h4>
+          <a href="#">About Us</a>
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Service</a>
+          <a href="#">Accessibility</a>
+          <a href="#">Contact Support</a>
+        </div>
+        <div class="footer-col footer-highlights">
+          <h4>Highlights</h4>
+          <ul>
+            <li>♿ Accessibility First</li>
+            <li>🔒 Secure Cloud Storage</li>
+            <li>📱 Multi-Device Sync</li>
+            <li>🌙 Dark Mode</li>
+            <li>⚡ Offline Access</li>
+            <li>📊 Progress Reports</li>
+            <li>🔄 Auto Backup</li>
+            <li>🧠 Spaced Repetition</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 ReVena — Smart Exam E-Library Platform. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- ===== SCROLL TO TOP ===== -->
+  <button id="scrollTopBtn" class="scroll-top-btn" aria-label="Scroll to top">↑</button>
+
+  <!-- ===== SCRIPTS ===== -->
+  <script src="../../../js/shared.js"></script>
+  <script src="../../../js/one-page-summaries.js"></script>
+</body>
+</html>
+

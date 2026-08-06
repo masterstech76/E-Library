@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Flashcard Generator — ReVena E-Library</title>
+  <meta name="description" content="Auto-create flashcards from your notes and questions for active recall. Review with spaced repetition and improve retention." />
+  <link rel="stylesheet" href="../../../css/flashcard-generator.css" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='40' fill='%239ae6ff'/%3E%3C/svg%3E" />
+</head>
+<body>
+
+  <!-- ===== BACKGROUND ===== -->
+  <div class="page-bg" aria-hidden="true">
+    <img src="../../../assets/images/Home.png" alt="Background" />
+  </div>
+
+  <!-- ===== TOAST CONTAINER ===== -->
+  <div id="toastContainer" class="toast-container" aria-live="polite"></div>
+
+  <!-- ===== HEADER ===== -->
+  <header class="fg-header">
+    <div class="fg-header-left">
+      <div class="fg-logo">
+        <canvas id="headerAtomicCanvas"></canvas>
+        <span>ReVena</span>
+      </div>
+      <nav class="fg-nav" aria-label="Flashcard generator navigation">
+        <a href="../../index.html">Home</a>
+        <a href="textbook-library.html">Textbooks</a>
+        <a href="reference-books.html">Reference</a>
+        <a href="previous-year-papers.html">Exam Papers</a>
+        <a href="#" class="active">Flashcards</a>
+        <a href="../account/profile.html">My Account</a>
+      </nav>
+    </div>
+    <div class="fg-header-right">
+      <button id="reviewModeBtn" class="fg-header-btn" title="Start review session">🃏 Review</button>
+    </div>
+  </header>
+
+  <div class="fg-page">
+
+    <!-- ===== BREADCRUMB ===== -->
+    <div class="fg-breadcrumb">
+      <a href="../../index.html">Home</a>
+      <span> › </span>
+      <span>Flashcard Generator</span>
+    </div>
+
+    <!-- ===== HERO ===== -->
+    <section class="fg-hero">
+      <div class="fg-hero-text">
+        <span class="fg-badge">🃏 Active Recall</span>
+        <h1><strong>Flashcard Generator</strong></h1>
+        <p>Auto-create flashcards from your notes and questions for powerful active recall. Review with built-in spaced repetition scheduling to boost long-term retention.</p>
+        <div class="fg-hero-actions">
+          <button id="heroGenerateBtn" class="fg-btn fg-btn-primary">✨ Generate Flashcards</button>
+          <button id="heroReviewBtn" class="fg-btn fg-btn-outline">🃏 Start Review</button>
+        </div>
+      </div>
+      <div class="fg-hero-visual">
+        <span class="fg-icon-large">🃏</span>
+      </div>
+    </section>
+
+    <!-- ===== GENERATOR SECTION ===== -->
+    <section class="fg-generator" id="generatorSection">
+      <div class="fg-gen-card">
+        <h2>📝 Generate from Notes</h2>
+        <div class="fg-field">
+          <label for="subjectSelect">Subject</label>
+          <select id="subjectSelect">
+            <option value="math">Mathematics</option>
+            <option value="science">Science</option>
+            <option value="cs">Computer Science</option>
+            <option value="english">English</option>
+            <option value="history">History &amp; Civics</option>
+            <option value="commerce">Commerce</option>
+            <option value="general" selected>General</option>
+          </select>
+        </div>
+        <div class="fg-field">
+          <label for="notesInput">Paste your notes / questions</label>
+          <textarea id="notesInput" placeholder="Paste your study notes, definitions, keywords, or Q&A pairs. One concept per line or use 'Question | Answer' format..."></textarea>
+        </div>
+        <div class="fg-field" style="margin-bottom:12px;">
+          <label for="cardCountInput">Number of cards to generate</label>
+          <input type="number" id="cardCountInput" min="1" max="50" value="10" />
+        </div>
+        <button id="generateBtn" class="fg-btn fg-btn-primary">✨ Auto-generate</button>
+        <p class="fg-hint">We'll split your content into concise question/answer flashcards automatically.</p>
+      </div>
+
+      <div class="fg-gen-card fg-preview">
+        <h2>👁️ Preview</h2>
+        <div id="previewArea">
+          <p class="fg-preview-empty">Generated flashcards will appear here. Click "Auto-generate" to begin.</p>
+        </div>
+        <div class="fg-preview-actions">
+          <button id="saveAllBtn" class="fg-btn fg-btn-success">💾 Save All to Deck</button>
+          <button id="clearPreviewBtn" class="fg-btn fg-btn-outline">🗑️ Clear</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== DECK MANAGER ===== -->
+    <section class="fg-deck" id="deckSection">
+      <div class="fg-deck-header">
+        <h2>📚 My Flashcard Deck</h2>
+        <span class="fg-deck-count" id="deckCount">0 cards</span>
+        <div class="fg-deck-actions">
+          <button id="exportBtn" class="fg-btn fg-btn-sm fg-btn-outline">⬇️ Export</button>
+          <button id="clearDeckBtn" class="fg-btn fg-btn-sm fg-btn-danger">🗑️ Clear Deck</button>
+        </div>
+      </div>
+      <div id="deckGrid" class="fg-deck-grid">
+        <div class="fg-empty-deck">
+          <span class="empty-icon">🃏</span>
+          <p>No flashcards yet. Generate some above or save the preview to build your deck.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== REVIEW MODE (spaced repetition) ===== -->
+    <section class="fg-review" id="reviewSection">
+      <div class="fg-review-header">
+        <h2>🃏 Review Session</h2>
+        <p class="fg-review-meta" id="reviewMeta">0 cards to review</p>
+        <div class="fg-review-progress">
+          <div class="fg-review-progress-top">
+            <span id="reviewProgressLabel">0 / 0</span>
+            <span id="reviewPercentLabel">0%</span>
+          </div>
+          <div class="fg-review-progress-track">
+            <div class="fg-review-progress-fill" id="reviewProgressFill" style="width:0%;"></div>
+          </div>
+        </div>
+      </div>
+
+      <div id="reviewCardArea">
+        <div class="fg-review-card">
+          <div class="fg-card" id="reviewCard">
+            <div class="fg-card-face fg-card-front">
+              <span class="card-label">Question</span>
+              <span class="card-content" id="reviewQText">Loading...</span>
+            </div>
+            <div class="fg-card-face fg-card-back">
+              <span class="card-label">Answer</span>
+              <span class="card-content" id="reviewAText"></span>
+            </div>
+          </div>
+        </div>
+        <div class="fg-review-actions">
+          <button class="fg-rate-btn again" data-rate="again">🔄 Again</button>
+          <button class="fg-rate-btn hard" data-rate="hard">😓 Hard</button>
+          <button class="fg-rate-btn good" data-rate="good">😊 Good</button>
+          <button class="fg-rate-btn easy" data-rate="easy">🚀 Easy</button>
+        </div>
+      </div>
+
+      <div class="fg-review-summary" id="reviewSummary">
+        <h2>🎉 Session Complete!</h2>
+        <p>Great job! Here's your review summary.</p>
+        <div class="fg-review-summary-stats">
+          <div class="fg-rs-stat">
+            <span class="rs-number" id="rsTotal">0</span>
+            <span class="rs-label">Reviewed</span>
+          </div>
+          <div class="fg-rs-stat">
+            <span class="rs-number" id="rsAgain">0</span>
+            <span class="rs-label">Again</span>
+          </div>
+          <div class="fg-rs-stat">
+            <span class="rs-number" id="rsHard">0</span>
+            <span class="rs-label">Hard</span>
+          </div>
+          <div class="fg-rs-stat">
+            <span class="rs-number" id="rsGood">0</span>
+            <span class="rs-label">Good</span>
+          </div>
+          <div class="fg-rs-stat">
+            <span class="rs-number" id="rsEasy">0</span>
+            <span class="rs-label">Easy</span>
+          </div>
+        </div>
+        <div class="fg-review-summary-actions">
+          <button id="endReviewBtn" class="fg-btn fg-btn-primary">📋 Back to Deck</button>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="site-footer" style="position:relative;z-index:1;">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <h3>ReVena</h3>
+        <p>AI-powered e-library platform designed to make studying smarter, more collaborative, and deeply engaging.</p>
+        <div class="footer-social">
+          <a href="#" aria-label="Twitter">𝕏</a>
+          <a href="#" aria-label="LinkedIn">in</a>
+          <a href="#" aria-label="GitHub">GH</a>
+          <a href="#" aria-label="YouTube">YT</a>
+        </div>
+      </div>
+      <div class="footer-links">
+        <div class="footer-col">
+          <h4>Platform</h4>
+          <a href="../../index.html#features-content">Smart Content</a>
+          <a href="../../index.html#features-ai">AI Features</a>
+          <a href="../../index.html#features-testing">Active Recall</a>
+          <a href="../../index.html#features-planning">Productivity</a>
+        </div>
+        <div class="footer-col">
+          <h4>Quick Links</h4>
+          <a href="../../index.html#features-content">Smart Content &amp; Delivery</a>
+          <a href="../../index.html#features-ai">AI &amp; Personalization</a>
+          <a href="../../index.html#features-testing">Active Recall &amp; Testing</a>
+          <a href="../../index.html#features-planning">Planning &amp; Productivity</a>
+          <a href="#">Help Center</a>
+        </div>
+        <div class="footer-col">
+          <h4>More</h4>
+          <a href="#">About Us</a>
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Service</a>
+          <a href="#">Accessibility</a>
+          <a href="#">Contact Support</a>
+        </div>
+        <div class="footer-col footer-highlights">
+          <h4>Highlights</h4>
+          <ul>
+            <li>♿ Accessibility First</li>
+            <li>🔒 Secure Cloud Storage</li>
+            <li>📱 Multi-Device Sync</li>
+            <li>🌙 Dark Mode</li>
+            <li>⚡ Offline Access</li>
+            <li>📊 Progress Reports</li>
+            <li>🔄 Auto Backup</li>
+            <li>🧠 Spaced Repetition</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 ReVena — Smart Exam E-Library Platform. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- ===== SCROLL TO TOP ===== -->
+  <button id="scrollTopBtn" class="scroll-top-btn" aria-label="Scroll to top">↑</button>
+
+  <!-- ===== SCRIPTS ===== -->
+  <script src="../../../js/shared.js"></script>
+  <script src="../../../js/flashcard-generator.js"></script>
+</body>
+</html>

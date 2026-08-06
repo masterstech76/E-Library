@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>YouTube Study Library — ReVena E-Library</title>
+  <meta name="description" content="Curated educational YouTube videos organized by subject, channel, and topic. Learn from top educators with embedded video player." />
+  <link rel="stylesheet" href="../../../css/youtube-study-library.css" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='40' fill='%239ae6ff'/%3E%3C/svg%3E" />
+</head>
+<body>
+
+  <!-- ===== BACKGROUND ===== -->
+  <div class="page-bg" aria-hidden="true">
+    <img src="../../../assets/images/Home.png" alt="Background" />
+  </div>
+
+  <!-- ===== TOAST CONTAINER ===== -->
+  <div id="toastContainer" class="toast-container" aria-live="polite"></div>
+
+  <!-- ===== PAGE WRAPPER ===== -->
+  <div class="yt-page">
+
+    <!-- ===== HEADER ===== -->
+    <header class="yt-header">
+      <div class="yt-header-left">
+        <div class="yt-logo">
+          <canvas id="headerAtomicCanvas"></canvas>
+          <span>ReVena</span>
+        </div>
+        <nav class="yt-nav" aria-label="YouTube library navigation">
+          <a href="../../index.html">Home</a>
+          <a href="textbook-library.html">Textbooks</a>
+          <a href="reference-books.html">Reference</a>
+          <a href="video-lectures.html">Lectures</a>
+          <a href="#" class="active">YouTube</a>
+          <a href="../account/profile.html">My Account</a>
+        </nav>
+      </div>
+      <div class="yt-search-bar">
+        <input type="text" id="globalSearchInput" class="form-control" placeholder="Search videos, channels, or subjects..." />
+        <button id="globalSearchBtn" class="search-btn" aria-label="Search">🔍</button>
+      </div>
+    </header>
+
+    <!-- ===== BREADCRUMB ===== -->
+    <div class="yt-breadcrumb">
+      <a href="../../index.html">Home</a>
+      <span> › </span>
+      <span>YouTube Study Library</span>
+    </div>
+
+    <!-- ===== SECTION HEADER ===== -->
+    <div class="yt-section-header">
+      <h1>🎥 <strong>YouTube Study Library</strong></h1>
+<p>Curated educational videos from top YouTube channels — organized by subject, channel, and topic. Watch, bookmark, take notes, and track your learning progress.</p>
+      <div class="yt-badge-row" id="subjectBadgeRow"></div>
+    </div>
+
+    <!-- ===== MAIN LAYOUT ===== -->
+    <div class="yt-main">
+
+      <!-- ===== LEFT / CENTER CONTENT ===== -->
+      <div class="yt-center">
+
+        <!-- ===== SUBJECT FILTER TABS ===== -->
+        <div class="yt-subject-tabs" id="subjectTabs"></div>
+
+        <!-- ===== CHANNEL FILTER ROW (dynamically rendered) ===== -->
+        <div class="yt-channel-bar" id="channelBar"></div>
+
+<!-- ===== RESULTS COUNT + CLEAR FILTERS ===== -->
+        <div class="yt-filter-toolbar">
+          <div class="yt-results-count" id="resultsCount"></div>
+          <button id="clearFiltersBtn" class="yt-clear-filters-btn" title="Reset subject, channel and search filters">🧹 Clear filters</button>
+        </div>
+
+        <!-- ===== BROWSE HEADER ===== -->
+        <div class="yt-section-header-row">
+          <h2>📺 Browse Videos</h2>
+          <div class="view-toggle">
+            <button id="viewGridBtn" class="active" title="Grid view">▦</button>
+            <button id="viewListBtn" title="List view">☰</button>
+          </div>
+        </div>
+
+        <!-- ===== VIDEO GRID ===== -->
+        <div class="yt-video-grid" id="videoGrid"></div>
+
+        <!-- ===== PAGINATION ===== -->
+        <div class="yt-pagination" id="pagination"></div>
+
+      </div>
+
+      <!-- ===== RIGHT SIDEBAR ===== -->
+      <aside class="yt-sidebar-right" aria-label="Quick access">
+
+        <!-- Watch Later -->
+        <div class="yt-sidebar-card">
+          <h3>⏰ Watch Later</h3>
+          <div id="watchLaterList">
+            <p class="text-muted" style="font-size:0.78rem;">No videos saved.</p>
+          </div>
+        </div>
+
+        <!-- Favorites -->
+        <div class="yt-sidebar-card">
+          <h3>⭐ Favorites</h3>
+          <div id="favoritesList">
+            <p class="text-muted" style="font-size:0.78rem;">No favorites yet.</p>
+          </div>
+        </div>
+
+        <!-- Recently Watched -->
+        <div class="yt-sidebar-card">
+          <h3>🕐 Recently Watched</h3>
+          <div id="recentlyWatched">
+            <p class="text-muted" style="font-size:0.78rem;">No videos watched yet.</p>
+          </div>
+        </div>
+
+        <!-- Top Channels -->
+        <div class="yt-sidebar-card">
+          <h3>📺 Top Channels</h3>
+          <div id="topChannels"></div>
+        </div>
+
+      </aside>
+    </div>
+
+    <!-- ===== VIDEO DETAIL / EMBED MODAL ===== -->
+    <div id="videoModal" class="yt-modal-overlay">
+      <div class="yt-modal">
+        <div class="yt-modal-header">
+          <h2 id="modalVideoTitle">Video Title</h2>
+          <button id="modalClose" class="yt-modal-close">&times;</button>
+        </div>
+        <div class="yt-modal-body">
+          <!-- Video Embed -->
+          <div class="yt-embed-container" id="embedContainer">
+            <div class="yt-embed-placeholder">
+              <span class="yt-embed-icon">🎥</span>
+              <span class="yt-embed-text">Loading video...</span>
+            </div>
+          </div>
+
+          <!-- Video Info -->
+          <div class="yt-video-info">
+            <div class="yt-video-meta">
+              <span id="modalChannel">📺 —</span>
+              <span id="modalSubject">📚 —</span>
+              <span id="modalDuration">⏱️ —</span>
+              <span id="modalViews">👁️ —</span>
+            </div>
+            <div class="yt-video-actions">
+              <button class="yt-btn yt-btn-primary" id="modalWatchLaterBtn">⏰ Watch Later</button>
+              <button class="yt-btn yt-btn-outline" id="modalFavBtn">⭐ Favorite</button>
+              <button class="yt-btn yt-btn-outline" id="modalShareBtn">🔗 Share</button>
+              <button class="yt-btn yt-btn-outline" id="modalOpenYtBtn">▶️ Open in YouTube</button>
+            </div>
+            <p class="yt-video-desc" id="modalDescription">Video description goes here.</p>
+          </div>
+
+<!-- Notes -->
+          <div class="yt-notes-section">
+            <h3>📝 Your Notes <span id="notesSavedIndicator" class="yt-notes-indicator"></span></h3>
+            <textarea id="videoNotesTextarea" placeholder="Write your notes for this video... Notes are saved automatically." rows="3"></textarea>
+            <div class="yt-notes-actions">
+              <button class="yt-btn yt-btn-sm yt-btn-primary" id="saveNotesBtn">💾 Save</button>
+              <button class="yt-btn yt-btn-sm yt-btn-outline" id="clearNotesBtn">🗑️ Clear</button>
+            </div>
+          </div>
+
+          <!-- Related Videos -->
+          <div class="yt-related-section">
+            <h3>🔗 Related Videos</h3>
+            <div id="relatedVideos" class="yt-related-grid"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+<!-- ===== EXTRA FEATURES BAR ===== -->
+    <div class="yt-extra-features">
+      <div class="yt-extra-card" id="shuffleBtn">
+        <span class="ef-icon">🎲</span>
+        <div class="ef-info">
+          <span class="ef-title">Shuffle Video</span>
+          <span class="ef-desc">Surprise me with a random video</span>
+        </div>
+      </div>
+      <div class="yt-extra-card" id="studyStreakBadge">
+        <span class="ef-icon">🔥</span>
+        <div class="ef-info">
+          <span class="ef-title">Study Streak</span>
+          <span class="ef-desc">0-day streak — keep learning daily!</span>
+        </div>
+      </div>
+      <div class="yt-extra-card" id="exportFavBtn">
+        <span class="ef-icon">📄</span>
+        <div class="ef-info">
+          <span class="ef-title">Export Favorites</span>
+          <span class="ef-desc">Download your favorite video list</span>
+        </div>
+      </div>
+      <div class="yt-extra-card" id="suggestChannelBtn">
+        <span class="ef-icon">💡</span>
+        <div class="ef-info">
+          <span class="ef-title">Suggest a Channel</span>
+          <span class="ef-desc">Recommend new YouTube channels</span>
+        </div>
+      </div>
+      <div class="yt-extra-card" id="watchHistoryBtn">
+        <span class="ef-icon">🕐</span>
+        <div class="ef-info">
+          <span class="ef-title">Watch History</span>
+          <span class="ef-desc">View your complete watch history</span>
+        </div>
+      </div>
+      <div class="yt-extra-card" id="notesExportBtn">
+        <span class="ef-icon">📝</span>
+        <div class="ef-info">
+          <span class="ef-title">Export Notes</span>
+          <span class="ef-desc">Download all video notes</span>
+        </div>
+      </div>
+      <div class="yt-extra-card" id="analyticsBtn">
+        <span class="ef-icon">📊</span>
+        <div class="ef-info">
+          <span class="ef-title">Learning Analytics</span>
+          <span class="ef-desc">Track video watch patterns</span>
+        </div>
+      </div>
+      <div class="yt-extra-card" id="a11yBtn">
+        <span class="ef-icon">♿</span>
+        <div class="ef-info">
+          <span class="ef-title">Accessibility</span>
+          <span class="ef-desc">Font scaling, captions, TTS</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== ANALYTICS PANEL ===== -->
+    <div class="yt-analytics-panel" id="analyticsPanel" style="display:none;">
+      <div class="yt-analytics-card">
+        <span class="an-icon">🎥</span>
+        <span class="an-value" id="anWatched">0</span>
+        <span class="an-label">Videos Watched</span>
+      </div>
+      <div class="yt-analytics-card">
+        <span class="an-icon">⭐</span>
+        <span class="an-value" id="anFavorites">0</span>
+        <span class="an-label">Favorites</span>
+      </div>
+      <div class="yt-analytics-card">
+        <span class="an-icon">⏰</span>
+        <span class="an-value" id="anWatchLater">0</span>
+        <span class="an-label">Watch Later</span>
+      </div>
+      <div class="yt-analytics-card">
+        <span class="an-icon">📝</span>
+        <span class="an-value" id="anNotes">0</span>
+        <span class="an-label">Notes Taken</span>
+      </div>
+      <div class="yt-analytics-card">
+        <span class="an-icon">📺</span>
+        <span class="an-value" id="anChannels">0</span>
+        <span class="an-label">Channels</span>
+      </div>
+      <div class="yt-analytics-card">
+        <span class="an-icon">🕐</span>
+        <span class="an-value" id="anLastWatched">—</span>
+        <span class="an-label">Last Watched</span>
+      </div>
+    </div>
+
+</div>
+
+  <!-- ================================================================ -->
+  <!-- MODAL: ADD VIDEO -->
+  <!-- ================================================================ -->
+  <div id="addVideoModal" class="yt-modal-overlay">
+    <div class="yt-modal yt-modal-form">
+      <div class="yt-modal-header">
+        <h2>➕ Add Video</h2>
+        <button class="yt-modal-close" data-close-modal="addVideoModal">&times;</button>
+      </div>
+      <div class="yt-modal-body">
+        <form id="addVideoForm" novalidate>
+          <!-- Source mode toggle -->
+          <div class="yt-av-mode-toggle">
+            <button type="button" class="yt-av-mode active" id="avModeFile">📁 Upload Video File</button>
+            <button type="button" class="yt-av-mode" id="avModeUrl">🔗 Add YouTube Link</button>
+          </div>
+
+          <!-- FILE UPLOAD MODE -->
+          <div id="avFileWrap">
+            <div id="avDropZone" class="yt-drop-zone">
+              <span class="dz-icon">📁</span>
+              <span class="dz-title">Drag &amp; drop a video file</span>
+              <span class="dz-sub">or click to browse</span>
+              <span class="dz-formats">Supported: MP4, WebM, MOV, M4V (max 1 GB)</span>
+              <input type="file" id="avFileInput" accept=".mp4,.webm,.mov,.m4v,.mkv,.avi" hidden />
+            </div>
+            <div id="avFileInfo" style="display:none;" class="yt-av-file-info"></div>
+            <span class="yt-form-hint">Your video is stored in your browser and plays in the built-in player.</span>
+          </div>
+
+          <!-- YOUTUBE URL MODE -->
+          <div id="avUrlWrap" style="display:none;">
+            <div class="yt-form-group">
+              <label>YouTube URL or Video ID <span class="required">*</span></label>
+              <input type="text" class="form-control" id="avUrl" placeholder="https://www.youtube.com/watch?v=WUvT157iWQ0 or WUvT157iWQ0" />
+              <span class="yt-form-hint">The video ID will be auto-extracted from the URL.</span>
+            </div>
+          </div>
+
+          <div class="yt-form-row">
+            <div class="yt-form-group">
+              <label>Video Title <span class="required">*</span></label>
+              <input type="text" class="form-control" id="avTitle" placeholder="e.g. Essence of Calculus — Limits &amp; Derivatives" required />
+            </div>
+          </div>
+          <div class="yt-form-row">
+            <div class="yt-form-group">
+              <label>Channel <span class="required">*</span></label>
+              <input type="text" class="form-control" id="avChannel" placeholder="e.g. 3Blue1Brown" required />
+              <span class="yt-form-hint">If the channel does not exist yet, it will be created automatically.</span>
+            </div>
+          </div>
+          <div class="yt-form-row">
+            <div class="yt-form-group">
+              <label>Subject / Category <span class="required">*</span></label>
+              <select class="form-control" id="avSubject">
+                <option value="math">📐 Mathematics</option>
+                <option value="science">🔬 Science</option>
+                <option value="cs">💻 Computer Science</option>
+                <option value="language">📖 Languages</option>
+                <option value="history">📜 History &amp; Civics</option>
+                <option value="commerce">📊 Commerce</option>
+                <option value="arts">🎨 Arts &amp; Humanities</option>
+                <option value="exam">🎯 Exam Prep</option>
+                <option value="new">➕ New category...</option>
+              </select>
+              <div id="avNewSubjectWrap" style="display:none;margin-top:8px;">
+                <input type="text" class="form-control" id="avNewSubject" placeholder="New category name, e.g. Robotics" />
+              </div>
+            </div>
+          </div>
+          <div class="yt-form-row">
+            <div class="yt-form-group">
+              <label>Duration</label>
+              <input type="text" class="form-control" id="avDuration" placeholder="e.g. 17:05" />
+            </div>
+            <div class="yt-form-group">
+              <label>Views</label>
+              <input type="number" class="form-control" id="avViews" placeholder="e.g. 8500000" min="0" />
+            </div>
+          </div>
+          <div class="yt-form-group">
+            <label>Description</label>
+            <textarea class="form-control" id="avDescription" rows="3" placeholder="Short description of this video..."></textarea>
+          </div>
+          <div class="yt-form-actions">
+            <button type="button" class="yt-btn yt-btn-outline" data-close-modal="addVideoModal">Cancel</button>
+            <button type="submit" class="yt-btn yt-btn-primary">💾 Save Video</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+<!-- ================================================================ -->
+  <!-- MODAL: SUGGEST CHANNEL -->
+  <!-- ================================================================ -->
+  <div id="suggestChannelModal" class="yt-modal-overlay">
+    <div class="yt-modal yt-modal-form">
+      <div class="yt-modal-header">
+        <h2>💡 Suggest a Channel</h2>
+        <button class="yt-modal-close" data-close-modal="suggestChannelModal">&times;</button>
+      </div>
+      <div class="yt-modal-body">
+        <form id="suggestChannelForm" novalidate>
+          <div class="yt-form-group">
+            <label>Channel Name <span class="required">*</span></label>
+            <input type="text" class="form-control" id="suggestChannelName" placeholder="e.g. Numberphile" required />
+          </div>
+          <div class="yt-form-group">
+            <label>Channel URL (optional)</label>
+            <input type="url" class="form-control" id="suggestChannelUrl" placeholder="https://www.youtube.com/@Numberphile" />
+          </div>
+          <div class="yt-form-group">
+            <label>Why should we add it?</label>
+            <textarea class="form-control" id="suggestChannelReason" rows="3" placeholder="Describe the educational value of this channel..."></textarea>
+          </div>
+          <div class="yt-form-actions">
+            <button type="button" class="yt-btn yt-btn-outline" data-close-modal="suggestChannelModal">Cancel</button>
+            <button type="submit" class="yt-btn yt-btn-primary">💡 Submit Suggestion</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================================================================ -->
+  <!-- MODAL: WATCH HISTORY -->
+  <!-- ================================================================ -->
+  <div id="watchHistoryModal" class="yt-modal-overlay">
+    <div class="yt-modal yt-modal-form">
+      <div class="yt-modal-header">
+        <h2>🕐 Watch History</h2>
+        <button class="yt-modal-close" data-close-modal="watchHistoryModal">&times;</button>
+      </div>
+      <div class="yt-modal-body">
+        <p class="yt-form-hint" style="margin-bottom:12px;display:block;">Your complete watch history — click any video to reopen it.</p>
+        <div id="watchHistoryList" class="yt-admin-manage-list"></div>
+        <div class="yt-form-actions">
+          <button type="button" class="yt-btn yt-btn-outline" id="clearHistoryBtn">🗑️ Clear History</button>
+          <button type="button" class="yt-btn yt-btn-primary" id="exportHistoryBtn">📄 Export History</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================================================================ -->
+  <!-- MODAL: ACCESSIBILITY -->
+  <!-- ================================================================ -->
+  <div id="accessibilityModal" class="yt-modal-overlay">
+    <div class="yt-modal yt-modal-form">
+      <div class="yt-modal-header">
+        <h2>♿ Accessibility</h2>
+        <button class="yt-modal-close" data-close-modal="accessibilityModal">&times;</button>
+      </div>
+      <div class="yt-modal-body">
+        <div class="yt-form-group">
+          <label>Font Size</label>
+          <div style="display:flex;align-items:center;gap:12px;">
+            <input type="range" id="a11yFontSize" min="13" max="22" value="15" style="flex:1;" />
+            <span id="a11yFontSizeLabel" class="yt-form-hint">15px</span>
+          </div>
+        </div>
+        <div class="yt-form-group">
+          <label>
+            <input type="checkbox" id="a11yHighContrast" /> High Contrast Mode
+          </label>
+        </div>
+        <div class="yt-form-group">
+          <label>
+            <input type="checkbox" id="a11yReduceMotion" /> Reduce Motion
+          </label>
+        </div>
+        <div class="yt-form-group">
+          <label>
+            <input type="checkbox" id="a11yLargeThumbs" /> Larger Video Thumbnails
+          </label>
+        </div>
+        <div class="yt-form-actions">
+          <button type="button" class="yt-btn yt-btn-primary" data-close-modal="accessibilityModal">Done</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="site-footer" style="position:relative;z-index:1;">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <h3>ReVena</h3>
+        <p>AI-powered e-library platform designed to make studying smarter, more collaborative, and deeply engaging.</p>
+        <div class="footer-social">
+          <a href="#" aria-label="Twitter">𝕏</a>
+          <a href="#" aria-label="LinkedIn">in</a>
+          <a href="#" aria-label="GitHub">GH</a>
+          <a href="#" aria-label="YouTube">YT</a>
+        </div>
+      </div>
+      <div class="footer-links">
+        <div class="footer-col">
+          <h4>Platform</h4>
+          <a href="../../index.html#features-content">Smart Content</a>
+          <a href="../../index.html#features-ai">AI Features</a>
+          <a href="../../index.html#features-testing">Active Recall</a>
+          <a href="../../index.html#features-planning">Productivity</a>
+        </div>
+        <div class="footer-col">
+          <h4>Quick Links</h4>
+          <a href="../../index.html#features-content">Smart Content &amp; Delivery</a>
+          <a href="../../index.html#features-ai">AI &amp; Personalization</a>
+          <a href="../../index.html#features-testing">Active Recall &amp; Testing</a>
+          <a href="../../index.html#features-planning">Planning &amp; Productivity</a>
+          <a href="#">Help Center</a>
+        </div>
+        <div class="footer-col">
+          <h4>More</h4>
+          <a href="#">About Us</a>
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Service</a>
+          <a href="#">Accessibility</a>
+          <a href="#">Contact Support</a>
+        </div>
+        <div class="footer-col footer-highlights">
+          <h4>Highlights</h4>
+          <ul>
+            <li>♿ Accessibility First</li>
+            <li>🔒 Secure Cloud Storage</li>
+            <li>📱 Multi-Device Sync</li>
+            <li>🌙 Dark Mode</li>
+            <li>⚡ Offline Access</li>
+            <li>📊 Progress Reports</li>
+            <li>🔄 Auto Backup</li>
+            <li>🧠 Spaced Repetition</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 ReVena — Smart Exam E-Library Platform. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- ===== SCROLL TO TOP ===== -->
+  <button id="scrollTopBtn" class="scroll-top-btn" aria-label="Scroll to top">↑</button>
+
+  <!-- ===== SCRIPTS ===== -->
+  <script src="../../../js/shared.js"></script>
+  <script src="../../../js/youtube-study-library.js"></script>
+</body>
+</html>

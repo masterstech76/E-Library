@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reference Books — ReVena E-Library</title>
+  <meta name="description" content="Browse reference books for 5th Std to TY across all streams — PCM, PCB, Commerce, Arts, CS, and Engineering." />
+  <link rel="stylesheet" href="../../../css/reference-books.css" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='40' fill='%239ae6ff'/%3E%3C/svg%3E" />
+</head>
+<body>
+
+  <!-- ===== BACKGROUND ===== -->
+  <div class="page-bg" aria-hidden="true">
+    <img src="../../../assets/images/Home.png" alt="Background" />
+  </div>
+
+  <!-- ===== TOAST CONTAINER ===== -->
+  <div id="toastContainer" class="toast-container" aria-live="polite"></div>
+
+  <!-- ===== PAGE WRAPPER ===== -->
+  <div class="ref-page">
+
+    <!-- ===== REFERENCE BOOKS HEADER ===== -->
+    <header class="ref-header">
+      <div class="ref-header-left">
+        <div class="ref-logo">
+          <canvas id="headerAtomicCanvas"></canvas>
+          <span>ReVena</span>
+        </div>
+        <nav class="ref-nav" aria-label="Reference navigation">
+          <a href="../../index.html">Home</a>
+          <a href="textbook-library.html">Textbooks</a>
+          <a href="#" class="active">Reference</a>
+          <a href="video-lectures.html">Lectures</a>
+          <a href="../account/profile.html">My Account</a>
+        </nav>
+      </div>
+      <div class="ref-search-bar">
+        <input type="text" id="globalSearchInput" class="form-control" placeholder="Search reference books by title, author, subject, or stream..." />
+        <button id="globalSearchBtn" class="search-btn" aria-label="Search">🔍</button>
+      </div>
+    </header>
+
+    <!-- ===== BREADCRUMB ===== -->
+    <div class="ref-breadcrumb">
+      <a href="../../index.html">Home</a>
+      <span> › </span>
+      <span>Reference Books</span>
+    </div>
+
+    <!-- ===== SECTION HEADER ===== -->
+    <div class="ref-section-header">
+      <h1>📚 <strong>Reference Books</strong></h1>
+      <p>Curated collection of essential reference books from <strong>5th Standard to TY</strong> across all streams — Science, Commerce, Arts, Computer Science, and Engineering.</p>
+      <div class="ref-badge-row">
+        <span>📖 5th to 10th Std</span>
+        <span>🧪 11th-12th Science</span>
+        <span>📊 11th-12th Commerce</span>
+        <span>🎨 11th-12th Arts</span>
+        <span>💻 FY/SY/TY CS/IT</span>
+        <span>⚙️ FY/SY/TY Engineering</span>
+      </div>
+    </div>
+
+    <!-- ===== MOBILE FILTER TOGGLE ===== -->
+    <button id="mobileFilterToggle" class="ref-mobile-filter-toggle">🔍 Show Filters</button>
+
+    <!-- ===== MAIN THREE-COLUMN LAYOUT ===== -->
+    <div class="ref-main">
+
+      <!-- ===== LEFT SIDEBAR: FILTERS ===== -->
+      <aside class="ref-sidebar-left" aria-label="Filters">
+
+        <!-- Academic Level -->
+        <div class="ref-filter-group">
+          <h4>🎓 Academic Level</h4>
+          <div id="levelFilters">
+            <label class="ref-filter-option">
+              <input type="radio" name="levelFilter" value="all" checked />
+              <span class="filter-label">All Levels</span>
+              <span class="filter-count" id="countAll">0</span>
+            </label>
+            <label class="ref-filter-option">
+              <input type="radio" name="levelFilter" value="primary" />
+              <span class="filter-label">5th - 8th Std</span>
+              <span class="filter-count" id="countPrimary">0</span>
+            </label>
+            <label class="ref-filter-option">
+              <input type="radio" name="levelFilter" value="secondary" />
+              <span class="filter-label">9th - 10th Std</span>
+              <span class="filter-count" id="countSecondary">0</span>
+            </label>
+            <label class="ref-filter-option">
+              <input type="radio" name="levelFilter" value="hsc" />
+              <span class="filter-label">11th - 12th Std</span>
+              <span class="filter-count" id="countHsc">0</span>
+            </label>
+            <label class="ref-filter-option">
+              <input type="radio" name="levelFilter" value="ug" />
+              <span class="filter-label">FY / SY / TY</span>
+              <span class="filter-count" id="countUg">0</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Stream (HSC & UG) -->
+        <div class="ref-filter-group" id="streamFilterGroup">
+          <h4>🧪 Stream / Branch</h4>
+          <div id="streamFilters">
+            <label class="ref-filter-option">
+              <input type="radio" name="streamFilter" value="all" checked />
+              <span class="filter-label">All Streams</span>
+              <span class="filter-count" id="countStreamAll">0</span>
+            </label>
+            <label class="ref-filter-option">
+              <input type="radio" name="streamFilter" value="pcm" />
+              <span class="filter-label">🔬 PCM (Science)</span>
+              <span class="filter-count" id="countPcm">0</span>
+            </label>
+            <label class="ref-filter-option">
+              <input type="radio" name="streamFilter" value="pcb" />
+              <span class="filter-label">🧬 PCB (Biology)</span>
+              <span class="filter-count" id="countPcb">0</span>
+            </label>
+            <label class="ref-filter-option">
+              <input type="radio" name="streamFilter" value="commerce" />
+              <span class="filter-label">📊 Commerce</span>
+              <span class="filter-count" id="countCommerce">0</span>
+            </label>
+            <label class="ref-filter-option">
+              <input type="radio" name="streamFilter" value="arts" />
+              <span class="filter-label">🎨 Arts / Humanities</span>
+              <span class="filter-count" id="countArts">0</span>
+            </label>
+            <label class="ref-filter-option">
+              <input type="radio" name="streamFilter" value="csit" />
+              <span class="filter-label">💻 CS / IT</span>
+              <span class="filter-count" id="countCsit">0</span>
+            </label>
+            <label class="ref-filter-option">
+              <input type="radio" name="streamFilter" value="engineering" />
+              <span class="filter-label">⚙️ Engineering</span>
+              <span class="filter-count" id="countEngineering">0</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Specific Standard -->
+        <div class="ref-filter-group">
+          <h4>📖 Standard / Year</h4>
+          <div id="standardFilters"></div>
+        </div>
+
+        <button class="ref-filter-clear">✕ Clear All Filters</button>
+      </aside>
+
+      <!-- ===== CENTER PANEL ===== -->
+      <main class="ref-center">
+
+        <!-- Academic Level Tabs -->
+        <div class="ref-level-tabs" id="levelTabs"></div>
+
+        <!-- Stream Tabs (shown for 11th+ and UG) -->
+        <div class="ref-stream-tabs" id="streamTabs" style="display:none;"></div>
+
+        <!-- Browse Header -->
+        <div class="ref-section-header-row">
+          <h2>📖 Browse Reference Books</h2>
+          <div class="view-toggle">
+            <button id="viewGridBtn" class="active" title="Grid view">▦</button>
+            <button id="viewListBtn" title="List view">☰</button>
+          </div>
+        </div>
+
+        <!-- Results Count -->
+        <div class="ref-results-count" id="resultsCount"></div>
+
+        <!-- Book Grid -->
+        <div class="ref-book-grid" id="bookGrid"></div>
+
+        <!-- Pagination -->
+        <div class="ref-pagination" id="pagination"></div>
+
+      </main>
+
+      <!-- ===== RIGHT SIDEBAR: QUICK ACCESS ===== -->
+      <aside class="ref-sidebar-right" aria-label="Quick access">
+
+        <!-- Favorites -->
+        <div class="ref-sidebar-card">
+          <h3>⭐ Favorites</h3>
+          <div id="favoritesList">
+            <p class="text-muted" style="font-size:0.78rem;">No favorites yet.</p>
+          </div>
+        </div>
+
+        <!-- Recently Viewed -->
+        <div class="ref-sidebar-card">
+          <h3>🕐 Recently Viewed</h3>
+          <div id="recentlyViewed">
+            <p class="text-muted" style="font-size:0.78rem;">No recently viewed books.</p>
+          </div>
+        </div>
+
+        <!-- Recommendations -->
+        <div class="ref-sidebar-card">
+          <h3>🤖 Recommended for You</h3>
+          <div id="recommendations">
+            <p class="text-muted" style="font-size:0.78rem;">Loading recommendations...</p>
+          </div>
+        </div>
+
+      </aside>
+    </div>
+
+    <!-- ===== MOBILE FILTER OVERLAY ===== -->
+    <div id="mobileFilterOverlay" class="ref-mobile-filter-overlay">
+      <button id="mobileFilterClose" class="filter-close">&times;</button>
+      <h2 style="color:var(--text-primary);margin-bottom:20px;font-weight:400;">🔍 Filters</h2>
+      <div class="ref-filter-group">
+        <h4>🎓 Academic Level</h4>
+        <label class="ref-filter-option"><input type="radio" name="mLevelFilter" value="all" checked /><span class="filter-label">All Levels</span></label>
+        <label class="ref-filter-option"><input type="radio" name="mLevelFilter" value="primary" /><span class="filter-label">5th - 8th Std</span></label>
+        <label class="ref-filter-option"><input type="radio" name="mLevelFilter" value="secondary" /><span class="filter-label">9th - 10th Std</span></label>
+        <label class="ref-filter-option"><input type="radio" name="mLevelFilter" value="hsc" /><span class="filter-label">11th - 12th Std</span></label>
+        <label class="ref-filter-option"><input type="radio" name="mLevelFilter" value="ug" /><span class="filter-label">FY / SY / TY</span></label>
+      </div>
+      <div class="ref-filter-group">
+        <h4>🧪 Stream / Branch</h4>
+        <label class="ref-filter-option"><input type="radio" name="mStreamFilter" value="all" checked /><span class="filter-label">All Streams</span></label>
+        <label class="ref-filter-option"><input type="radio" name="mStreamFilter" value="pcm" /><span class="filter-label">🔬 PCM (Science)</span></label>
+        <label class="ref-filter-option"><input type="radio" name="mStreamFilter" value="pcb" /><span class="filter-label">🧬 PCB (Biology)</span></label>
+        <label class="ref-filter-option"><input type="radio" name="mStreamFilter" value="commerce" /><span class="filter-label">📊 Commerce</span></label>
+        <label class="ref-filter-option"><input type="radio" name="mStreamFilter" value="arts" /><span class="filter-label">🎨 Arts / Humanities</span></label>
+        <label class="ref-filter-option"><input type="radio" name="mStreamFilter" value="csit" /><span class="filter-label">💻 CS / IT</span></label>
+        <label class="ref-filter-option"><input type="radio" name="mStreamFilter" value="engineering" /><span class="filter-label">⚙️ Engineering</span></label>
+      </div>
+      <button class="ref-filter-clear" style="margin-top:16px;">✕ Clear All Filters</button>
+    </div>
+
+    <!-- ===== EXTRA FEATURES BAR ===== -->
+    <div class="ref-extra-features">
+      <div class="ref-extra-card">
+        <span class="ef-icon">📝</span>
+        <div class="ef-info">
+          <span class="ef-title">Notes &amp; Highlights</span>
+          <span class="ef-desc">Annotate reference books as you read</span>
+        </div>
+      </div>
+      <div class="ref-extra-card">
+        <span class="ef-icon">📄</span>
+        <div class="ef-info">
+          <span class="ef-title">Citation Generator</span>
+          <span class="ef-desc">Auto-generate citations in MLA/APA</span>
+        </div>
+      </div>
+      <div class="ref-extra-card">
+        <span class="ef-icon">🔗</span>
+        <div class="ef-info">
+          <span class="ef-title">Related Resources</span>
+          <span class="ef-desc">Articles, lecture notes &amp; video tutorials</span>
+        </div>
+      </div>
+      <div class="ref-extra-card">
+        <span class="ef-icon">⭐</span>
+        <div class="ef-info">
+          <span class="ef-title">Top 5 Must-Reads</span>
+          <span class="ef-desc">Faculty-recommended essential books</span>
+        </div>
+      </div>
+      <div class="ref-extra-card">
+        <span class="ef-icon">💡</span>
+        <div class="ef-info">
+          <span class="ef-title">Suggest a Book</span>
+          <span class="ef-desc">Recommend new reference books</span>
+        </div>
+      </div>
+      <div class="ref-extra-card">
+        <span class="ef-icon">♿</span>
+        <div class="ef-info">
+          <span class="ef-title">Accessibility Options</span>
+          <span class="ef-desc">Text-to-speech, font scaling, dark mode</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== UPLOAD SECTION ===== -->
+    <section id="uploadSection" class="ref-upload-section">
+      <h2 class="section-title">📤 Upload Reference Book</h2>
+      <p class="section-subtitle">Contribute to the library — upload PDF, ePub, or DOCX reference books for the community.</p>
+
+      <div class="ref-upload-layout">
+        <!-- Drag & Drop Zone -->
+        <div>
+          <div id="dropZone" class="ref-drop-zone">
+            <span class="dz-icon">📁</span>
+            <span class="dz-title">Drag &amp; Drop Files Here</span>
+            <span class="dz-subtitle">or click to browse</span>
+            <span class="dz-formats">Supported: PDF, ePub, DOCX (max 50 MB each)</span>
+            <input type="file" id="fileInput" accept=".pdf,.epub,.docx" multiple />
+          </div>
+          <p style="font-size:0.75rem; color:var(--text-muted); margin-top:8px; text-align:center;">
+            💡 Bulk upload supported — select multiple files at once
+          </p>
+        </div>
+
+        <!-- Metadata Form -->
+        <div class="ref-upload-form">
+          <form id="uploadForm" novalidate>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Title <span class="required">*</span></label>
+                <input type="text" class="form-control" placeholder="e.g. Advanced Mathematics" id="uploadTitle" />
+              </div>
+              <div class="form-group">
+                <label>Author <span class="required">*</span></label>
+                <input type="text" class="form-control" placeholder="e.g. Dr. R. Sharma" id="uploadAuthor" />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Edition</label>
+                <input type="text" class="form-control" placeholder="e.g. 5th Edition" id="uploadEdition" />
+              </div>
+              <div class="form-group">
+                <label>Academic Level <span class="required">*</span></label>
+                <select class="form-control" id="uploadLevel">
+                  <option value="">Select level...</option>
+                  <option value="primary">5th - 8th Std</option>
+                  <option value="secondary">9th - 10th Std</option>
+                  <option value="hsc">11th - 12th Std</option>
+                  <option value="ug">FY / SY / TY</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Stream (HSC &amp; UG)</label>
+                <select class="form-control" id="uploadStream">
+                  <option value="">Select stream...</option>
+                  <option value="pcm">PCM (Science)</option>
+                  <option value="pcb">PCB (Biology)</option>
+                  <option value="commerce">Commerce</option>
+                  <option value="arts">Arts / Humanities</option>
+                  <option value="csit">CS / IT</option>
+                  <option value="engineering">Engineering</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Standard / Year</label>
+                <select class="form-control" id="uploadStandard">
+                  <option value="">Select standard...</option>
+                  <option value="5th">5th</option>
+                  <option value="6th">6th</option>
+                  <option value="7th">7th</option>
+                  <option value="8th">8th</option>
+                  <option value="9th">9th</option>
+                  <option value="10th">10th</option>
+                  <option value="11th">11th</option>
+                  <option value="12th">12th</option>
+                  <option value="FY">First Year</option>
+                  <option value="SY">Second Year</option>
+                  <option value="TY">Third Year</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Subject</label>
+                <input type="text" class="form-control" placeholder="e.g. Physics, Calculus, Economics" id="uploadSubject" />
+              </div>
+              <div class="form-group">
+                <label>ISBN</label>
+                <input type="text" class="form-control" placeholder="e.g. 978-81-234-5678-9" id="uploadIsbn" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Tags / Keywords</label>
+              <input type="text" class="form-control" placeholder="e.g. algebra, NCERT, IIT-JEE, reference" id="uploadTags" />
+            </div>
+
+            <!-- Copyright confirmation -->
+            <label class="ref-upload-checkbox">
+              <input type="checkbox" id="copyrightCheck" />
+              <span class="check-text">
+                I confirm that I have the right to upload this reference book and it complies with copyright and licensing requirements. <span class="required">*</span>
+              </span>
+            </label>
+
+<!-- Actions -->
+            <div class="ref-upload-actions">
+              <button type="button" id="previewBtn" class="btn btn-secondary">👁️ Preview</button>
+              <button type="button" id="submitUploadBtn" class="btn btn-primary">📤 Publish to Library</button>
+            </div>
+            <p style="font-size:0.72rem; color:var(--text-muted); margin-top:8px;">
+              Your reference book is added to the library instantly and is available to all students.
+            </p>
+          </form>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="site-footer" style="position:relative;z-index:1;">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <h3>ReVena</h3>
+        <p>AI-powered e-library platform designed to make studying smarter, more collaborative, and deeply engaging.</p>
+        <div class="footer-social">
+          <a href="#" aria-label="Twitter">𝕏</a>
+          <a href="#" aria-label="LinkedIn">in</a>
+          <a href="#" aria-label="GitHub">GH</a>
+          <a href="#" aria-label="YouTube">YT</a>
+        </div>
+      </div>
+      <div class="footer-links">
+        <div class="footer-col">
+          <h4>Platform</h4>
+          <a href="../../index.html#features-content">Smart Content</a>
+          <a href="../../index.html#features-ai">AI Features</a>
+          <a href="../../index.html#features-testing">Active Recall</a>
+          <a href="../../index.html#features-planning">Productivity</a>
+        </div>
+        <div class="footer-col">
+          <h4>Quick Links</h4>
+          <a href="../../index.html#features-content">Smart Content &amp; Delivery</a>
+          <a href="../../index.html#features-ai">AI &amp; Personalization</a>
+          <a href="../../index.html#features-testing">Active Recall &amp; Testing</a>
+          <a href="../../index.html#features-planning">Planning &amp; Productivity</a>
+          <a href="#">Help Center</a>
+        </div>
+        <div class="footer-col">
+          <h4>More</h4>
+          <a href="#">About Us</a>
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Service</a>
+          <a href="#">Accessibility</a>
+          <a href="#">Contact Support</a>
+        </div>
+        <div class="footer-col footer-highlights">
+          <h4>Highlights</h4>
+          <ul>
+            <li>♿ Accessibility First</li>
+            <li>🔒 Secure Cloud Storage</li>
+            <li>📱 Multi-Device Sync</li>
+            <li>🌙 Dark Mode</li>
+            <li>⚡ Offline Access</li>
+            <li>📊 Progress Reports</li>
+            <li>🔄 Auto Backup</li>
+            <li>🧠 Spaced Repetition</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 ReVena — Smart Exam E-Library Platform. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- ===== SCROLL TO TOP ===== -->
+  <button id="scrollTopBtn" class="scroll-top-btn" aria-label="Scroll to top">↑</button>
+
+  <!-- ===== SCRIPTS ===== -->
+  <script src="../../../js/shared.js"></script>
+  <script src="../../../js/reference-books.js"></script>
+</body>
+</html>
+

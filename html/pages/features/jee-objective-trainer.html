@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Objective Trainer — ReVena E-Library</title>
+  <meta name="description" content="Upload study material, generate MCQ single / multiple correct and numerical fill-in-the-blank questions, save to a bank, and push to the mock exam simulator." />
+  <link rel="stylesheet" href="../../../css/jee-objective-trainer.css" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='40' fill='%239ae6ff'/%3E%3C/svg%3E" />
+</head>
+<body>
+
+  <!-- ===== BACKGROUND ===== -->
+  <div class="page-bg" aria-hidden="true">
+    <img src="../../../assets/images/Home.png" alt="Background" />
+  </div>
+
+  <!-- ===== TOAST CONTAINER ===== -->
+  <div id="toastContainer" class="toast-container" aria-live="polite"></div>
+
+  <!-- ===== HEADER ===== -->
+  <header class="jot-header">
+    <div class="jot-header-left">
+      <div class="jot-logo">
+        <canvas id="headerAtomicCanvas"></canvas>
+        <span>ReVena</span>
+      </div>
+      <nav class="jot-nav" aria-label="JEE navigation">
+        <a href="../../index.html">Home</a>
+        <a href="#" class="active">Objective Trainer</a>
+        <a href="jee-exam.html">Mock Exam</a>
+        <a href="../account/profile.html">My Account</a>
+      </nav>
+    </div>
+    <div class="jot-header-right">
+      <button id="exportBankBtn" class="jot-header-btn" title="Export question bank">⬇ Export</button>
+    </div>
+  </header>
+
+  <div class="jot-page">
+
+    <!-- ===== BREADCRUMB ===== -->
+    <div class="jot-breadcrumb">
+      <a href="../../index.html">Home</a>
+        <span> › </span>
+      <span>AI Objective Trainer</span>
+    </div>
+
+    <!-- ===== HERO ===== -->
+    <section class="jot-hero">
+      <span class="jot-hero-badge">🤖 AI Practice Agent</span>
+      <h1><strong>AI Objective Trainer</strong></h1>
+      <p>Upload your study material — the AI extracts topics and generates exam-style <strong>MCQ single</strong>, <strong>MCQ multiple correct</strong>, and <strong>numerical / fill-in-the-blank</strong> questions. Save them to a bank and push straight into the timed <strong>Mock Exam</strong>.</p>
+    </section>
+
+    <!-- ===== MAIN LAYOUT ===== -->
+    <div class="jot-layout">
+
+      <!-- ===== MAIN COLUMN ===== -->
+      <div class="jot-main">
+
+        <!-- 1. UPLOAD -->
+        <section class="jot-panel" aria-label="Upload material">
+          <h2>📤 Upload Study Material</h2>
+          <div class="jot-upload" id="dropZone" role="button" tabindex="0" aria-label="Upload a PDF, TXT, or DOCX file">
+            <div class="jot-upload-icon">📄</div>
+            <p><strong>Drag &amp; drop</strong> a file here, or <span class="jot-link">browse</span></p>
+            <p class="jot-upload-hint">PDF · TXT · DOCX (max 25 MB) — processed locally</p>
+            <input type="file" id="fileInput" accept=".pdf,.txt,.md,.docx" hidden />
+          </div>
+<div class="jot-upload-status" id="uploadStatus"></div>
+          <div class="jot-extracted" id="extractedWrap" hidden>
+            <div class="ex-label">📌 Extracted Topics</div>
+            <div class="ex-tags" id="extractedTags"></div>
+          </div>
+
+<div class="jot-generate-row">
+            <button id="generateExamBtn" class="jot-btn jot-btn-exam">🎓 Generate Exam</button>
+          </div>
+        </section>
+
+        <!-- 2. AI AGENT (large container, below upload) -->
+        <section class="jot-panel jot-agent-container" aria-label="ReVena AI Agent with live internet">
+          <div class="jot-agent-head">
+            <img class="jot-agent-logo" src="../../../assets/images/AI Agent.webp" alt="ReVena AI Agent" />
+            <div class="jot-agent-title">
+              <h2>🤖 ReVena AI Agent</h2>
+              <p>Live internet access · ask about JEE concepts, patterns &amp; study tips</p>
+            </div>
+            <span class="jot-agent-status" id="agentStatus"><span class="ag-status-dot"></span> Checking…</span>
+          </div>
+
+          <div class="jot-agent-chatbox" id="agentChatBox">
+            <div class="ag-chat-body" id="agentChatBody">
+              <div class="ag-msg ag-msg-agent">
+                <span class="ag-msg-avatar">🤖</span>
+                <div class="ag-bubble">
+                  Hi! I'm your <strong>ReVena AI Agent</strong>. I'm connected to the live internet and can fetch real information for you. Ask me about JEE concepts, exam patterns, or study tips — I'll bring the answer straight here. 🚀
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="jot-agent-input">
+            <input type="text" id="agentChatInput" placeholder="Ask about JEE Physics, Chemistry, Maths…" />
+            <button id="agentChatSend" aria-label="Send message">➤</button>
+          </div>
+          <div class="ag-chat-suggestions">
+            <button class="ag-suggestion">Explain Newton's second law</button>
+            <button class="ag-suggestion">What is Avogadro's number?</button>
+            <button class="ag-suggestion">JEE Main vs Advanced pattern</button>
+            <button class="ag-suggestion">Kinematics equations</button>
+          </div>
+        </section>
+
+      </div>
+
+      <!-- ===== SIDEBAR ===== -->
+      <aside class="jot-sidebar" aria-label="Stats, bank, and push to exam">
+
+        <div class="jot-sidebar-card">
+          <h3>📊 Practice Stats</h3>
+          <div class="jot-stats">
+            <div class="jot-stat"><span class="js-number" id="statAttempted">0</span><span class="js-label">Attempted</span></div>
+            <div class="jot-stat"><span class="js-number" id="statCorrect">0</span><span class="js-label">Correct</span></div>
+            <div class="jot-stat"><span class="js-number" id="statAccuracy">0%</span><span class="js-label">Accuracy</span></div>
+            <div class="jot-stat"><span class="js-number" id="statSaved">0</span><span class="js-label">Saved</span></div>
+          </div>
+        </div>
+
+        <div class="jot-sidebar-card">
+          <h3>🎯 Weak Topics</h3>
+          <div class="jot-weak-list" id="weakTopics"></div>
+          <div class="jot-weak-empty" id="weakEmpty">No weak topics yet — keep practicing!</div>
+        </div>
+
+        <div class="jot-sidebar-card">
+          <h3>🔖 Saved Question Bank</h3>
+          <div class="jot-bank-toolbar">
+            <button id="pushToExamBtn" class="jot-btn jot-btn-primary jot-btn-sm">🚀 Push to Exam</button>
+            <button id="clearBankBtn" class="jot-btn jot-btn-outline jot-btn-sm">🗑️ Clear</button>
+          </div>
+          <div class="jot-saved-list" id="savedList"></div>
+          <div class="jot-weak-empty" id="savedEmpty" style="margin-top:8px;">No saved questions yet.</div>
+        </div>
+
+        <div class="jot-detail-block info">
+          <ul>
+            <li><strong>MCQ single:</strong> pick exactly one correct option</li>
+            <li><strong>MCQ multiple:</strong> pick all correct options (JEE Adv)</li>
+            <li><strong>Numerical:</strong> integer / decimal answer</li>
+            <li>Instant feedback + point to source concept</li>
+          </ul>
+        </div>
+
+      </aside>
+    </div>
+
+  </div>
+
+<!-- ===== AI AGENT CHAT FAB ===== -->
+  <button id="agentChatBtn" class="jot-agent-fab" aria-label="Open AI exam agent chat" title="Chat with AI exam agent">
+    <span class="ag-fab-icon">🤖</span>
+  </button>
+
+  <!-- ===== AI AGENT CHAT PANEL ===== -->
+  <div id="agentChatPanel" class="jot-agent-chat" role="dialog" aria-label="AI exam agent chat">
+    <div class="ag-chat-header">
+      <div class="ag-chat-id">
+        <span class="ag-chat-avatar">🤖</span>
+        <div>
+          <strong>ReVena Exam Agent</strong>
+          <span class="ag-status"><span class="ag-status-dot"></span> Online</span>
+        </div>
+      </div>
+      <button id="agentChatClose" class="ag-chat-close" aria-label="Close chat">✕</button>
+    </div>
+<div class="ag-chat-body" id="fabChatBody">
+      <div class="ag-msg ag-msg-agent">
+        <span class="ag-msg-avatar">🤖</span>
+        <div class="ag-bubble">
+          Hi! I'm your <strong>ReVena Exam Agent</strong>. I can explain JEE concepts, exam patterns, and study tips — but I won't reveal answers to live exam questions. 🚀
+        </div>
+      </div>
+    </div>
+    <div class="ag-chat-input">
+      <input type="text" id="fabChatInput" placeholder="Ask about exam concepts or tips…" />
+      <button id="fabChatSend">➤</button>
+    </div>
+    <div class="ag-chat-suggestions">
+      <button class="ag-suggestion">Explain kinematics</button>
+      <button class="ag-suggestion">JEE Main vs Advanced pattern</button>
+      <button class="ag-suggestion">Study tip for exams</button>
+      <button class="ag-suggestion">How to improve weak topics</button>
+    </div>
+  </div>
+
+  <!-- ===== CONSENT MODAL ===== -->
+  <div id="consentModal" class="jot-modal" role="dialog" aria-modal="true" aria-labelledby="consentTitle" hidden>
+    <div class="jot-modal-box">
+      <h3 id="consentTitle">🔒 Privacy &amp; AI Consent</h3>
+      <p>Your files are processed <strong>locally on your device</strong>. No file content is uploaded to any server unless you explicitly enable an external AI/API service below.</p>
+      <label class="jot-consent-row">
+        <input type="checkbox" id="consentExternalAi" />
+        <span>Allow sending extracted text to an external AI/API for better question generation.</span>
+      </label>
+      <div class="jot-modal-actions">
+        <button id="consentCancel" class="jot-btn jot-btn-outline">Cancel</button>
+        <button id="consentOk" class="jot-btn jot-btn-primary">Continue (local only)</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="site-footer" style="position:relative;z-index:1;">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <h3>ReVena</h3>
+        <p>AI-powered e-library platform designed to make studying smarter, more collaborative, and deeply engaging.</p>
+        <div class="footer-social">
+          <a href="#" aria-label="Twitter">𝕏</a>
+          <a href="#" aria-label="LinkedIn">in</a>
+          <a href="#" aria-label="GitHub">GH</a>
+          <a href="#" aria-label="YouTube">YT</a>
+        </div>
+      </div>
+      <div class="footer-links">
+        <div class="footer-col">
+          <h4>Platform</h4>
+          <a href="../../index.html#features-content">Smart Content</a>
+          <a href="../../index.html#features-ai">AI Features</a>
+          <a href="../../index.html#features-testing">Active Recall</a>
+          <a href="../../index.html#features-planning">Productivity</a>
+        </div>
+        <div class="footer-col">
+          <h4>Quick Links</h4>
+          <a href="../../index.html#features-content">Smart Content &amp; Delivery</a>
+          <a href="../../index.html#features-ai">AI &amp; Personalization</a>
+          <a href="../../index.html#features-testing">Active Recall &amp; Testing</a>
+          <a href="../../index.html#features-planning">Planning &amp; Productivity</a>
+          <a href="#">Help Center</a>
+        </div>
+        <div class="footer-col">
+          <h4>More</h4>
+          <a href="#">About Us</a>
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Service</a>
+          <a href="#">Accessibility</a>
+          <a href="#">Contact Support</a>
+        </div>
+        <div class="footer-col footer-highlights">
+          <h4>Highlights</h4>
+          <ul>
+            <li>♿ Accessibility First</li>
+            <li>🔒 Secure Cloud Storage</li>
+            <li>📱 Multi-Device Sync</li>
+            <li>🌙 Dark Mode</li>
+            <li>⚡ Offline Access</li>
+            <li>📊 Progress Reports</li>
+            <li>🔄 Auto Backup</li>
+            <li>🧠 Spaced Repetition</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 ReVena — Smart Exam E-Library Platform. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- ===== SCROLL TO TOP ===== -->
+  <button id="scrollTopBtn" class="scroll-top-btn" aria-label="Scroll to top">↑</button>
+
+  <!-- ===== SCRIPTS ===== -->
+  <script src="../../../js/shared.js"></script>
+  <script src="../../../js/jee-objective-trainer.js"></script>
+</body>
+</html>

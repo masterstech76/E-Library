@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JEE Mock Exam — ReVena E-Library</title>
+  <meta name="description" content="Strict timed JEE Main &amp; Advanced objective simulator. MCQ single correct, MCQ multiple correct, and numerical questions — imports your AI Objective Trainer banks." />
+  <link rel="stylesheet" href="../../../css/jee-exam.css" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='40' fill='%239ae6ff'/%3E%3C/svg%3E" />
+</head>
+<body>
+
+  <!-- ===== BACKGROUND ===== -->
+  <div class="page-bg" aria-hidden="true">
+    <img src="../../../assets/images/Home.png" alt="Background" />
+  </div>
+
+  <!-- ===== TOAST CONTAINER ===== -->
+  <div id="toastContainer" class="toast-container" aria-live="polite"></div>
+
+  <!-- ===== HEADER ===== -->
+  <header class="jex-header">
+    <div class="jex-header-left">
+      <div class="jex-logo">
+        <canvas id="headerAtomicCanvas"></canvas>
+        <span>ReVena</span>
+      </div>
+      <nav class="jex-nav" aria-label="JEE navigation">
+        <a href="../../index.html">Home</a>
+        <a href="jee-objective-trainer.html">Objective Trainer</a>
+        <a href="#" class="active">Mock Exam</a>
+        <a href="../account/profile.html">My Account</a>
+      </nav>
+    </div>
+    <div class="jex-header-right">
+      <button id="fullscreenBtn" class="jex-header-btn" title="Toggle full-screen exam mode">⛶ Fullscreen</button>
+    </div>
+  </header>
+
+  <div class="jex-page">
+
+    <!-- ===== BREADCRUMB ===== -->
+    <div class="jex-breadcrumb">
+      <a href="../../index.html">Home</a>
+        <span> › </span>
+      <a href="jee-objective-trainer.html">Objective Trainer</a>
+        <span> › </span>
+      <span>Mock Exam</span>
+    </div>
+
+    <!-- ===== HERO ===== -->
+    <section class="jex-hero">
+      <span class="jex-hero-badge">🏁 Exam Simulation</span>
+      <h1><strong>JEE Mock Exam</strong></h1>
+      <p>Strict, timed objective simulator for JEE Main &amp; Advanced. Supports <strong>MCQ single correct</strong>, <strong>MCQ multiple correct</strong>, and <strong>numerical</strong> questions — and can import banks you built in the <strong>AI Objective Trainer</strong>.</p>
+    </section>
+
+    <!-- ===== IMPORT MODAL (detects jeeTempBank) ===== -->
+    <div id="importModal" class="jex-modal" role="dialog" aria-modal="true" aria-labelledby="importTitle" hidden>
+      <div class="jex-modal-box">
+        <h3 id="importTitle">📥 Import Question Bank</h3>
+        <p id="importDesc">A question bank was pushed from the AI Objective Trainer.</p>
+        <div class="jex-modal-actions">
+          <button id="importCancel" class="jex-btn jex-btn-outline">Cancel</button>
+          <button id="importOk" class="jex-btn jex-btn-primary">Import Bank</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== CONFIG ===== -->
+    <section class="jex-config" id="configPanel" aria-label="Configure mock exam">
+      <h2>📋 Configure Your Mock Exam</h2>
+      <div class="jex-config-grid">
+        <div class="jex-field">
+          <label for="examModeSelect">Exam Mode</label>
+<select id="examModeSelect">
+            <option value="main" selected>JEE Main</option>
+            <option value="advanced">JEE Advanced</option>
+          </select>
+        </div>
+        <div class="jex-field">
+          <label for="subjectSelect">Subject</label>
+          <select id="subjectSelect">
+            <option value="physics">Physics</option>
+            <option value="chemistry">Chemistry</option>
+            <option value="maths">Mathematics</option>
+            <option value="all" selected>All Subjects</option>
+          </select>
+        </div>
+        <div class="jex-field">
+          <label for="difficultySelect">Difficulty</label>
+          <select id="difficultySelect">
+            <option value="easy">Easy</option>
+            <option value="medium" selected>Medium</option>
+            <option value="hard">Hard</option>
+          </select>
+        </div>
+<div class="jex-field">
+          <label for="durationInput">Duration (minutes)</label>
+          <input type="number" id="durationInput" min="5" max="180" value="180" />
+        </div>
+        <div class="jex-field">
+          <label for="questionCount">Questions</label>
+          <select id="questionCount">
+            <option value="15">15</option>
+            <option value="30">30</option>
+            <option value="45">45</option>
+            <option value="60">60</option>
+            <option value="90" selected>90 (Full Paper)</option>
+          </select>
+        </div>
+        <div class="jex-field">
+          <label for="numericTolerance">Numerical tolerance</label>
+          <select id="numericTolerance">
+            <option value="0.01" selected>0.01</option>
+            <option value="0.1">0.1</option>
+            <option value="0.5">0.5</option>
+            <option value="1">1</option>
+          </select>
+        </div>
+      </div>
+<div class="jex-pattern-note">
+📜 <strong>Standard pattern</strong>: 30 questions per subject (25 MCQ + 5 numerical). With all subjects selected you get 90 questions — 75 MCQ (single/multiple) + 15 numerical over 180 minutes.
+      </div>
+<div class="jex-config-source">
+        <label><input type="checkbox" id="sourceBankChk" /> Use imported trainer bank (if any)</label>
+        <span class="jex-source-note" id="bankCountNote"></span>
+      </div>
+      <div class="jex-config-actions">
+        <button id="beginExamBtn" class="jex-btn jex-btn-primary">🚀 Begin Exam</button>
+        <button id="resetConfigBtn" class="jex-btn jex-btn-outline">↺ Reset</button>
+      </div>
+    </section>
+
+    <!-- ===== EXAM MODE ===== -->
+    <section class="jex-exam" id="examMode" aria-label="Exam in progress">
+
+      <div class="jex-timer-bar">
+        <div class="jex-timer-info">
+          <div class="jex-timer-clock" id="timerClock">60:00</div>
+          <div class="jex-timer-meta">
+            <span>⏱️ <strong id="timerStatus">Ready</strong></span>
+            <span>📝 Q <strong id="qCounter">1</strong> / <span id="totalQ">0</span></span>
+            <span>📂 <span id="currentSection">Physics</span></span>
+          </div>
+        </div>
+        <div class="jex-timer-actions">
+          <button id="pauseResumeBtn" class="jex-btn jex-btn-sm jex-btn-outline">⏸ Pause</button>
+          <button id="submitExamBtn" class="jex-btn jex-btn-sm jex-btn-danger">✓ Submit</button>
+        </div>
+        <div class="jex-progress-wrap">
+          <div class="jex-progress-top">
+            <span id="progressAnswered">0 answered</span>
+            <span id="progressPercent">0%</span>
+          </div>
+          <div class="jex-progress-track">
+            <div class="jex-progress-fill" id="progressFill" style="width:0%;"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="jex-layout">
+        <!-- Question panel -->
+        <div class="jex-question-panel">
+          <div class="jex-q-header">
+            <span class="jex-q-section" id="qSectionLabel">Physics</span>
+            <span class="jex-q-style" id="qStyleLabel">Single Correct</span>
+            <span class="jex-q-marks" id="qMarks">+4 / −1</span>
+          </div>
+          <div class="jex-q-number" id="qNumberLabel">Question 1</div>
+          <div class="jex-q-text" id="qText">Configure and begin your exam.</div>
+          <div class="jex-options" id="qOptions"></div>
+          <div class="jex-numeric" id="qNumericWrap" hidden>
+            <input type="text" id="qNumericInput" inputmode="decimal" placeholder="Enter your numerical answer…" />
+          </div>
+          <div class="jex-q-nav">
+            <button id="prevQBtn" class="jex-btn jex-btn-outline">← Previous</button>
+            <button id="markReviewBtn" class="jex-btn jex-btn-outline">🚩 Mark for Review</button>
+            <button id="clearRespBtn" class="jex-btn jex-btn-outline">✕ Clear</button>
+            <button id="nextQBtn" class="jex-btn jex-btn-primary">Next →</button>
+          </div>
+        </div>
+
+        <!-- Sidebar -->
+        <aside class="jex-sidebar" aria-label="Exam navigation">
+          <div class="jex-sidebar-card">
+            <h3>📂 Sections</h3>
+            <div class="jex-section-nav" id="sectionNav"></div>
+          </div>
+          <div class="jex-sidebar-card">
+            <h3>🔢 Question Palette</h3>
+            <div class="jex-palette" id="questionPalette"></div>
+            <div class="jex-palette-legend">
+              <span><span class="lg-dot answered"></span> Answered</span>
+              <span><span class="lg-dot marked"></span> Marked</span>
+              <span><span class="lg-dot current"></span> Current</span>
+              <span><span class="lg-dot unanswered"></span> Unanswered</span>
+            </div>
+          </div>
+          <button class="jex-btn jex-btn-danger jex-sidebar-submit" id="sidebarSubmitBtn">✓ Submit Exam</button>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ===== RESULTS ===== -->
+    <section class="jex-results" id="resultsSection" aria-label="Exam results">
+      <div class="jex-score-hero">
+        <div class="jex-score-circle" id="scoreCircle" style="--score-angle:0%;">
+          <div class="jex-score-inner">
+            <span class="sc-number" id="scoreNumber">0</span>
+            <span class="sc-total" id="scoreTotalLabel">/ 0</span>
+          </div>
+        </div>
+        <h2 id="scoreTitle">Exam Complete!</h2>
+        <p class="score-msg" id="scoreMessage">Review your performance below.</p>
+        <div class="jex-score-stats">
+          <div class="jex-score-stat"><span class="ss-number ss-correct" id="statCorrect">0</span><span class="ss-label">Correct</span></div>
+          <div class="jex-score-stat"><span class="ss-number ss-wrong" id="statWrong">0</span><span class="ss-label">Incorrect</span></div>
+          <div class="jex-score-stat"><span class="ss-number ss-skipped" id="statSkipped">0</span><span class="ss-label">Skipped</span></div>
+          <div class="jex-score-stat"><span class="ss-number" id="statAccuracy">0%</span><span class="ss-label">Accuracy</span></div>
+          <div class="jex-score-stat"><span class="ss-number" id="statTimeUsed">00:00</span><span class="ss-label">Time Used</span></div>
+        </div>
+      </div>
+
+      <div class="jex-sw-summary">
+        <div class="jex-sw-card"><h3>💪 Strengths</h3><div class="jex-strength-list" id="strengthList"></div></div>
+        <div class="jex-sw-card"><h3>🎯 Areas to Improve</h3><div class="jex-weakness-list" id="weaknessList"></div></div>
+      </div>
+
+      <div class="jex-review">
+        <h2>📖 Answer Review &amp; Solutions</h2>
+        <div id="reviewList"></div>
+      </div>
+
+      <div class="jex-results-actions">
+        <button id="retakeBtn" class="jex-btn jex-btn-primary">🔄 Retake Exam</button>
+        <button id="newExamBtn" class="jex-btn jex-btn-outline">📋 New Exam</button>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="site-footer" style="position:relative;z-index:1;">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <h3>ReVena</h3>
+        <p>AI-powered e-library platform designed to make studying smarter, more collaborative, and deeply engaging.</p>
+        <div class="footer-social">
+          <a href="#" aria-label="Twitter">𝕏</a>
+          <a href="#" aria-label="LinkedIn">in</a>
+          <a href="#" aria-label="GitHub">GH</a>
+          <a href="#" aria-label="YouTube">YT</a>
+        </div>
+      </div>
+      <div class="footer-links">
+        <div class="footer-col">
+          <h4>Platform</h4>
+          <a href="../../index.html#features-content">Smart Content</a>
+          <a href="../../index.html#features-ai">AI Features</a>
+          <a href="../../index.html#features-testing">Active Recall</a>
+          <a href="../../index.html#features-planning">Productivity</a>
+        </div>
+        <div class="footer-col">
+          <h4>Quick Links</h4>
+          <a href="../../index.html#features-content">Smart Content &amp; Delivery</a>
+          <a href="../../index.html#features-ai">AI &amp; Personalization</a>
+          <a href="../../index.html#features-testing">Active Recall &amp; Testing</a>
+          <a href="../../index.html#features-planning">Planning &amp; Productivity</a>
+          <a href="#">Help Center</a>
+        </div>
+        <div class="footer-col">
+          <h4>More</h4>
+          <a href="#">About Us</a>
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Service</a>
+          <a href="#">Accessibility</a>
+          <a href="#">Contact Support</a>
+        </div>
+        <div class="footer-col footer-highlights">
+          <h4>Highlights</h4>
+          <ul>
+            <li>♿ Accessibility First</li>
+            <li>🔒 Secure Cloud Storage</li>
+            <li>📱 Multi-Device Sync</li>
+            <li>🌙 Dark Mode</li>
+            <li>⚡ Offline Access</li>
+            <li>📊 Progress Reports</li>
+            <li>🔄 Auto Backup</li>
+            <li>🧠 Spaced Repetition</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 ReVena — Smart Exam E-Library Platform. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- ===== SCROLL TO TOP ===== -->
+  <button id="scrollTopBtn" class="scroll-top-btn" aria-label="Scroll to top">↑</button>
+
+  <!-- ===== SCRIPTS ===== -->
+  <script src="../../../js/shared.js"></script>
+  <script src="../../../js/jee-exam.js"></script>
+</body>
+</html>

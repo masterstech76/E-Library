@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Adaptive Quizzes — ReVena E-Library</title>
+  <meta name="description" content="Adaptive Quizzes with real-time difficulty adjustment. Auto-tunes question difficulty based on your answers to keep practice challenging but manageable." />
+  <link rel="stylesheet" href="../../../css/adaptive-quizzes.css" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='40' fill='%239ae6ff'/%3E%3C/svg%3E" />
+</head>
+<body>
+
+  <!-- ===== BACKGROUND ===== -->
+  <div class="page-bg" aria-hidden="true">
+    <img src="../../../assets/images/Home.png" alt="Background" />
+  </div>
+
+  <!-- ===== TOAST CONTAINER ===== -->
+  <div id="toastContainer" class="toast-container" aria-live="polite"></div>
+
+  <!-- ===== HEADER ===== -->
+  <header class="aq-header">
+    <div class="aq-header-left">
+      <div class="aq-logo">
+        <canvas id="headerAtomicCanvas"></canvas>
+        <span>ReVena</span>
+      </div>
+      <nav class="aq-nav" aria-label="Adaptive quizzes navigation">
+        <a href="../../index.html">Home</a>
+        <a href="textbook-library.html">Textbooks</a>
+        <a href="reference-books.html">Reference</a>
+        <a href="timed-mock-tests.html">Mock Tests</a>
+        <a href="#" class="active">Adaptive Quizzes</a>
+        <a href="../account/profile.html">My Account</a>
+      </nav>
+    </div>
+    <div class="aq-header-right">
+      <button id="aqFullscreenBtn" class="aq-header-btn" title="Toggle fullscreen quiz">⛶ Fullscreen</button>
+    </div>
+  </header>
+
+  <div class="aq-page">
+
+    <!-- ===== BREADCRUMB ===== -->
+    <div class="aq-breadcrumb">
+      <a href="../../index.html">Home</a>
+      <span> › </span>
+      <span>Adaptive Quizzes</span>
+    </div>
+
+    <!-- ===== HERO ===== -->
+    <section class="aq-hero">
+      <div class="aq-hero-text">
+        <span class="aq-badge">🧠 AI Adaptive Engine</span>
+        <h1><strong>Adaptive Quizzes</strong></h1>
+        <p>Real-time difficulty adjustment. The quiz engine assesses your knowledge dynamically and tunes question difficulty based on your answers — keeping practice challenging but manageable.</p>
+        <div class="aq-select-actions">
+          <button id="aqStartQuizBtn" class="aq-btn aq-btn-primary">▶ Start Adaptive Quiz</button>
+          <button id="aqSeeProgressBtn" class="aq-btn aq-btn-outline">📈 See Your Progress</button>
+        </div>
+      </div>
+      <div class="aq-hero-visual">
+        <span class="aq-icon-large">🧠</span>
+      </div>
+    </section>
+
+    <!-- ===== PURPOSE CARDS ===== -->
+    <section class="aq-purpose" aria-label="Why adaptive quizzes">
+      <div class="aq-purpose-card">
+        <span class="pc-icon">📊</span>
+        <div>
+          <span class="pc-title">Dynamic Assessment</span>
+          <span class="pc-desc">Question difficulty adjusts in real time to your knowledge level.</span>
+        </div>
+      </div>
+      <div class="aq-purpose-card">
+        <span class="pc-icon">🎚️</span>
+        <div>
+          <span class="pc-title">Challenging &amp; Manageable</span>
+          <span class="pc-desc">Never too easy, never too hard — optimal learning zone every step.</span>
+        </div>
+      </div>
+      <div class="aq-purpose-card">
+        <span class="pc-icon">📈</span>
+        <div>
+          <span class="pc-title">Visible Growth</span>
+          <span class="pc-desc">Track difficulty trend and see how your mastery improves over time.</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== QUIZ SELECTION PANEL ===== -->
+    <section class="aq-select" id="aqSelectPanel" aria-label="Configure adaptive quiz">
+      <h2>🎯 Configure Your Adaptive Quiz</h2>
+      <div class="aq-select-grid">
+        <div class="aq-field">
+          <label for="aqSubject">Subject</label>
+          <select id="aqSubject">
+            <option value="math">Mathematics</option>
+            <option value="science">Science</option>
+            <option value="cs">Computer Science</option>
+            <option value="english">English</option>
+            <option value="history">History &amp; Civics</option>
+            <option value="commerce">Commerce</option>
+            <option value="mixed" selected>Mixed (All Subjects)</option>
+          </select>
+        </div>
+        <div class="aq-field">
+          <label for="aqTopic">Topic Focus</label>
+          <select id="aqTopic">
+            <option value="core" selected>Core Concepts</option>
+            <option value="advanced">Advanced Problems</option>
+            <option value="mixed-topics">Mixed Topics</option>
+          </select>
+        </div>
+        <div class="aq-field">
+          <label for="aqStartLevel">Starting Level</label>
+          <select id="aqStartLevel">
+            <option value="easy">Easy</option>
+            <option value="medium" selected>Medium</option>
+            <option value="hard">Hard</option>
+          </select>
+        </div>
+        <div class="aq-field">
+          <label for="aqQuestions">Number of Questions</label>
+          <select id="aqQuestions">
+            <option value="5">5 Questions</option>
+            <option value="10" selected>10 Questions</option>
+            <option value="15">15 Questions</option>
+          </select>
+        </div>
+      </div>
+      <div class="aq-select-actions">
+        <button id="aqBeginQuizBtn" class="aq-btn aq-btn-primary">🚀 Begin Adaptive Quiz</button>
+        <button id="aqResetConfigBtn" class="aq-btn aq-btn-outline">↺ Reset</button>
+      </div>
+    </section>
+
+    <!-- ===== LIVE QUIZ ===== -->
+    <section class="aq-quiz" id="aqQuizMode" aria-label="Quiz in progress">
+      <div class="aq-quiz-layout">
+        <!-- Main: question card -->
+        <div class="aq-quiz-main">
+          <div class="aq-quiz-card">
+            <div class="aq-quiz-top">
+              <div>
+                <span class="aq-topic-label" id="aqTopicLabel">Topic</span>
+                <div class="aq-q-counter" id="aqQCounter">Question 1 of 10</div>
+              </div>
+              <div class="aq-quiz-top-right">
+                <div class="aq-diff-meter">
+                  <span>Difficulty</span>
+                  <div class="meter-track"><div class="meter-fill" id="aqDiffFill" style="width:50%;"></div></div>
+                  <span class="aq-diff" id="aqDiffBadge">Medium</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="aq-q-timer">
+              <span>⏱️ Time: <span class="aq-timer-clock" id="aqQTimerClock">0:10</span></span>
+            </div>
+
+            <div class="aq-q-text" id="aqQText">Loading question...</div>
+            <div class="aq-options" id="aqOptions"></div>
+            <div class="aq-answer-input-wrap aq-hidden" id="aqInputWrap">
+              <input type="text" class="aq-answer-input" id="aqAnswerInput" placeholder="Type your answer..." />
+            </div>
+
+            <!-- Feedback panel -->
+            <div class="aq-feedback" id="aqFeedback">
+              <div class="fb-title" id="aqFbTitle"></div>
+              <div class="fb-explain" id="aqFbExplain"></div>
+              <div class="fb-next" id="aqFbNext"></div>
+            </div>
+
+            <div class="aq-next-btn aq-hidden" id="aqNextWrap">
+              <button id="aqNextBtn" class="aq-btn aq-btn-primary">Next Question →</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sidebar: progress & stats -->
+        <aside class="aq-sidebar" aria-label="Quiz progress">
+          <div class="aq-sidebar-card">
+            <h3>📊 Quick Stats</h3>
+            <div class="aq-quick-stats">
+              <div class="aq-stat">
+                <span class="st-number" id="aqScore">0</span>
+                <span class="st-label">Score</span>
+              </div>
+              <div class="aq-stat">
+                <span class="st-number" id="aqStreak">0</span>
+                <span class="st-label">Streak 🔥</span>
+              </div>
+              <div class="aq-stat">
+                <span class="st-number" id="aqCorrect">0</span>
+                <span class="st-label">Correct</span>
+              </div>
+              <div class="aq-stat">
+                <span class="st-number" id="aqAvgTime">0s</span>
+                <span class="st-label">Avg Time/Q</span>
+              </div>
+            </div>
+          </div>
+          <div class="aq-sidebar-card">
+            <h3>📈 Progress</h3>
+            <div class="aq-progress-wrap">
+              <div class="aq-progress-top">
+                <span id="aqProgressLabel">0 / 10 answered</span>
+                <span id="aqProgressPct">0%</span>
+              </div>
+              <div class="aq-progress-track">
+                <div class="aq-progress-fill" id="aqProgressFill" style="width:0%;"></div>
+              </div>
+            </div>
+            <h3 style="margin-top:14px;">🎚️ Difficulty Trend</h3>
+            <div class="aq-diff-history" id="aqDiffHistory">
+              <p class="aq-muted" style="font-size:0.75rem;color:var(--text-muted);">No questions answered yet.</p>
+            </div>
+          </div>
+          <div class="aq-sidebar-card">
+            <button id="aqPauseBtn" class="aq-btn aq-btn-outline" style="width:100%;justify-content:center;">⏸ Pause Quiz</button>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ===== RESULTS / POST-QUIZ ANALYSIS ===== -->
+    <section class="aq-results" id="aqResultsSection" aria-label="Quiz results">
+      <div class="aq-result-hero">
+        <h2 id="aqResultTitle">Quiz Complete!</h2>
+        <p class="aq-score-msg" id="aqScoreMsg">Here's how your adaptive learning went.</p>
+        <div class="aq-result-stats">
+          <div class="aq-result-stat">
+            <span class="rs-number rs-correct" id="aqStatCorrect">0</span>
+            <span class="rs-label">Correct</span>
+          </div>
+          <div class="aq-result-stat">
+            <span class="rs-number rs-wrong" id="aqStatWrong">0</span>
+            <span class="rs-label">Incorrect</span>
+          </div>
+          <div class="aq-result-stat">
+            <span class="rs-number" id="aqStatAccuracy">0%</span>
+            <span class="rs-label">Accuracy</span>
+          </div>
+          <div class="aq-result-stat">
+            <span class="rs-number" id="aqStatAvgTime">0s</span>
+            <span class="rs-label">Avg Time/Q</span>
+          </div>
+          <div class="aq-result-stat">
+            <span class="rs-number" id="aqStatFinalLevel">Medium</span>
+            <span class="rs-label">Final Level</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Adaptive growth -->
+      <div class="aq-growth">
+        <div class="aq-growth-card">
+          <h3>💪 What You're Mastering</h3>
+          <div class="aq-growth-list" id="aqStrengthList"></div>
+        </div>
+        <div class="aq-growth-card">
+          <h3>🎯 Areas to Improve</h3>
+          <div class="aq-growth-list" id="aqWeaknessList"></div>
+        </div>
+      </div>
+
+      <!-- Recommendations -->
+      <div class="aq-recommend">
+        <h2>🧭 Recommended Next Steps</h2>
+        <div class="aq-recommend-list" id="aqRecommendList"></div>
+      </div>
+
+      <!-- Review -->
+      <div class="aq-review">
+        <h2>📖 Answer Review</h2>
+        <div id="aqReviewList"></div>
+      </div>
+
+      <div class="aq-result-actions">
+        <button id="aqRetakeBtn" class="aq-btn aq-btn-primary">🔄 Keep Improving</button>
+        <button id="aqNewQuizBtn" class="aq-btn aq-btn-outline">📋 New Quiz</button>
+        <button id="aqSeeProgressBtn2" class="aq-btn aq-btn-outline">📈 See Your Progress</button>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="site-footer" style="position:relative;z-index:1;">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <h3>ReVena</h3>
+        <p>AI-powered e-library platform designed to make studying smarter, more collaborative, and deeply engaging.</p>
+        <div class="footer-social">
+          <a href="#" aria-label="Twitter">𝕏</a>
+          <a href="#" aria-label="LinkedIn">in</a>
+          <a href="#" aria-label="GitHub">GH</a>
+          <a href="#" aria-label="YouTube">YT</a>
+        </div>
+      </div>
+      <div class="footer-links">
+        <div class="footer-col">
+          <h4>Platform</h4>
+          <a href="../../index.html#features-content">Smart Content</a>
+          <a href="../../index.html#features-ai">AI Features</a>
+          <a href="../../index.html#features-testing">Active Recall</a>
+          <a href="../../index.html#features-planning">Productivity</a>
+        </div>
+        <div class="footer-col">
+          <h4>Quick Links</h4>
+          <a href="../../index.html#features-content">Smart Content &amp; Delivery</a>
+          <a href="../../index.html#features-ai">AI &amp; Personalization</a>
+          <a href="../../index.html#features-testing">Active Recall &amp; Testing</a>
+          <a href="../../index.html#features-planning">Planning &amp; Productivity</a>
+          <a href="#">Help Center</a>
+        </div>
+        <div class="footer-col">
+          <h4>More</h4>
+          <a href="#">About Us</a>
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Service</a>
+          <a href="#">Accessibility</a>
+          <a href="#">Contact Support</a>
+        </div>
+        <div class="footer-col footer-highlights">
+          <h4>Highlights</h4>
+          <ul>
+            <li>♿ Accessibility First</li>
+            <li>🔒 Secure Cloud Storage</li>
+            <li>📱 Multi-Device Sync</li>
+            <li>🌙 Dark Mode</li>
+            <li>⚡ Offline Access</li>
+            <li>📊 Progress Reports</li>
+            <li>🔄 Auto Backup</li>
+            <li>🧠 Spaced Repetition</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 ReVena — Smart Exam E-Library Platform. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- ===== SCROLL TO TOP ===== -->
+  <button id="scrollTopBtn" class="scroll-top-btn" aria-label="Scroll to top">↑</button>
+
+  <!-- ===== SCRIPTS ===== -->
+  <script src="../../../js/shared.js"></script>
+  <script src="../../../js/adaptive-quizzes.js"></script>
+</body>
+</html>

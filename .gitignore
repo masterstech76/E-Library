@@ -1,0 +1,27 @@
+# Java / Maven build artifacts
+backend/target/
+target/
+
+# Compiled classes
+*.class
+
+# Eclipse / IDE
+.settings/
+.classpath
+.project
+*.iml
+.idea/
+
+# VS Code
+.vscode/
+
+# Logs
+*.log
+backend/backend-run.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temp / helper scripts
+*.ps1

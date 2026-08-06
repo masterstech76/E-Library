@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Class Notes Upload — ReVena E-Library</title>
+  <meta name="description" content="Upload your class notes (PDF, TXT, DOCX) and generate AI-powered summaries automatically. Turn long lecture notes into review-ready content." />
+  <link rel="stylesheet" href="../../../css/class-notes-upload.css" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='40' fill='%239ae6ff'/%3E%3C/svg%3E" />
+</head>
+<body>
+
+  <!-- ===== BACKGROUND ===== -->
+  <div class="page-bg" aria-hidden="true">
+    <img src="../../../assets/images/Home.png" alt="Background" />
+  </div>
+
+  <!-- ===== TOAST CONTAINER ===== -->
+  <div id="toastContainer" class="toast-container" aria-live="polite"></div>
+
+  <!-- ===== PAGE WRAPPER ===== -->
+  <div class="cnu-page">
+
+    <!-- ===== HEADER ===== -->
+    <header class="cnu-header">
+      <div class="cnu-header-left">
+        <div class="cnu-logo">
+          <canvas id="headerAtomicCanvas"></canvas>
+          <span>ReVena</span>
+        </div>
+        <nav class="cnu-nav" aria-label="Class notes navigation">
+          <a href="../../index.html">Home</a>
+          <a href="textbook-library.html">Textbooks</a>
+          <a href="#" class="active">Notes Upload</a>
+          <a href="one-page-summaries.html">Summaries</a>
+          <a href="text-to-speech.html">Text-to-Speech</a>
+          <a href="../account/profile.html">My Account</a>
+        </nav>
+      </div>
+      <div class="cnu-search-bar">
+        <input type="text" id="globalSearchInput" class="form-control" placeholder="Search saved notes..." />
+        <button id="globalSearchBtn" class="search-btn" aria-label="Search">🔍</button>
+      </div>
+    </header>
+
+    <!-- ===== BREADCRUMB ===== -->
+    <div class="cnu-breadcrumb">
+      <a href="../../index.html">Home</a>
+      <span> › </span>
+      <span>Class Notes Upload</span>
+    </div>
+
+    <!-- ===== SECTION HEADER ===== -->
+    <div class="cnu-section-header">
+      <h1>📤 <strong>Class Notes Upload</strong></h1>
+      <p>Upload PDF/Text notes with <strong>AI-powered summaries</strong> — turn long lecture notes into review-ready content in one click.</p>
+      <div class="cnu-badge-row">
+        <span>📄 PDF</span>
+        <span>📝 TXT</span>
+        <span>📗 DOCX</span>
+        <span>🤖 AI Summary</span>
+        <span>⚡ Instant</span>
+        <span>🔒 Private</span>
+      </div>
+    </div>
+
+    <!-- ===== TABS ===== -->
+    <div class="cnu-tabs">
+      <button class="cnu-tab active" data-tab="upload">📤 Upload</button>
+      <button class="cnu-tab" data-tab="summary">🤖 Summary</button>
+      <button class="cnu-tab" data-tab="saved">💾 Saved Notes</button>
+    </div>
+
+    <!-- ===== MAIN LAYOUT ===== -->
+    <div class="cnu-main">
+
+      <!-- ===== CENTER CONTENT ===== -->
+      <div class="cnu-center">
+
+        <!-- ===== TAB: UPLOAD ===== -->
+        <section id="tab-upload" class="cnu-tab-panel">
+          <div class="cnu-upload-section">
+            <h2>📁 <span>Upload Your Notes</span></h2>
+            <p class="section-subtitle">Drag &amp; drop your notes below, or click to browse. The AI will generate a fast summary automatically.</p>
+
+            <!-- Drop Zone -->
+            <div id="dropZone" class="cnu-drop-zone">
+              <span class="dz-icon">📤</span>
+              <span class="dz-title">Drag &amp; Drop Files Here</span>
+              <span class="dz-sub">or click to browse</span>
+              <span class="dz-formats">Supported: PDF, TXT, DOCX (max 20 MB each)</span>
+              <input type="file" id="fileInput" accept=".pdf,.txt,.docx,.doc" multiple />
+            </div>
+
+            <!-- AI Badge -->
+            <div style="text-align:center; margin-top:12px;">
+              <span class="cnu-ai-badge">🤖 AI-Powered Summary</span>
+            </div>
+
+            <!-- Progress Indicator -->
+            <div class="cnu-progress-wrapper" id="uploadProgressWrapper">
+              <div class="cnu-progress-label">
+                <span id="uploadProgressText">Processing...</span>
+                <span id="uploadProgressPct">0%</span>
+              </div>
+              <div class="cnu-progress-track">
+                <div class="cnu-progress-fill" id="uploadProgressFill"></div>
+              </div>
+            </div>
+
+            <!-- Status Badge -->
+            <div style="text-align:center;">
+              <span class="cnu-status-badge" id="uploadStatusBadge" style="display:none;"></span>
+            </div>
+
+            <!-- Manual Text Input -->
+            <div style="margin-top:20px;">
+              <label style="font-size:0.78rem; color:var(--text-secondary); font-weight:600; display:block; margin-bottom:8px;">
+                ✍️ Or paste your notes directly
+              </label>
+              <textarea class="cnu-text-input" id="manualTextInput" placeholder="Paste your lecture notes here... The AI summary will be generated from this text."></textarea>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="cnu-actions">
+              <button class="cnu-btn cnu-btn-primary" id="generateSummaryBtn">🤖 Generate Summary</button>
+              <button class="cnu-btn cnu-btn-outline" id="loadSampleBtn">📄 Load Sample Notes</button>
+            </div>
+
+            <!-- Sample Thumbnails -->
+            <div class="cnu-samples" id="sampleCards"></div>
+
+            <!-- Upload Instructions -->
+            <div class="cnu-instructions">
+              <div class="cnu-instruction">
+                <span class="in-icon">📤</span>
+                <div>
+                  <span class="in-title">1. Upload</span>
+                  <span class="in-desc">Drop PDF, TXT, or DOCX files up to 20 MB.</span>
+                </div>
+              </div>
+              <div class="cnu-instruction">
+                <span class="in-icon">🤖</span>
+                <div>
+                  <span class="in-title">2. Auto-Summarize</span>
+                  <span class="in-desc">AI extracts key points in seconds.</span>
+                </div>
+              </div>
+              <div class="cnu-instruction">
+                <span class="in-icon">💾</span>
+                <div>
+                  <span class="in-title">3. Save &amp; Revise</span>
+                  <span class="in-desc">Save summaries to your study library.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== TAB: SUMMARY ===== -->
+        <section id="tab-summary" class="cnu-tab-panel" style="display:none;">
+          <div class="cnu-upload-section">
+            <h2>🤖 <span>AI Summary Preview</span></h2>
+            <p class="section-subtitle">Your generated summary appears here. Two-column view — original on the left, AI summary on the right.</p>
+
+            <!-- Work Area -->
+            <div class="cnu-work-area">
+              <!-- Original Notes Panel -->
+              <div class="cnu-panel">
+                <div class="cnu-panel-header">
+                  <h3>📄 Original Notes</h3>
+                  <span id="originalFileName" class="cnu-status-badge ready" style="margin-top:0;">—</span>
+                </div>
+                <div class="cnu-panel-body">
+                  <div class="cnu-original-text" id="originalNotesText">
+                    <p class="text-muted" style="font-size:0.82rem;">No notes loaded yet. Upload a file or paste text to begin.</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- AI Summary Panel -->
+              <div class="cnu-panel">
+                <div class="cnu-panel-header">
+                  <h3>🤖 AI Summary</h3>
+                  <span class="cnu-status-badge" id="summaryStatusBadge" style="margin-top:0;">Ready</span>
+                </div>
+                <div class="cnu-panel-body">
+                  <div id="aiSummaryContent">
+                    <p class="text-muted" style="font-size:0.82rem;">Click "Generate Summary" to create your AI-powered summary.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Summary Meta -->
+            <div class="cnu-summary-meta" id="summaryMeta" style="display:none;">
+              <span class="meta-chip" id="summaryLengthChip">—</span>
+              <span class="meta-chip" id="summaryConfidenceChip">—</span>
+              <span class="meta-chip" id="summaryWordCountChip">—</span>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="cnu-actions">
+              <button class="cnu-btn cnu-btn-primary" id="saveSummaryBtn">💾 Save Study Notes</button>
+              <button class="cnu-btn cnu-btn-outline" id="downloadSummaryTxtBtn">📄 Export as Text</button>
+              <button class="cnu-btn cnu-btn-outline" id="refineSummaryBtn">🔄 Refine Summary</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== TAB: SAVED NOTES ===== -->
+        <section id="tab-saved" class="cnu-tab-panel" style="display:none;">
+          <div class="cnu-upload-section">
+            <h2>💾 <span>Saved Study Notes</span></h2>
+            <p class="section-subtitle">Your saved summaries live here — review, download, or delete them anytime.</p>
+            <div id="savedNotesList" class="cnu-saved-list"></div>
+          </div>
+        </section>
+
+      </div>
+
+      <!-- ===== RIGHT SIDEBAR ===== -->
+      <aside class="cnu-sidebar-right" aria-label="Quick access">
+
+        <!-- Stats -->
+        <div class="cnu-sidebar-card">
+          <h3>📊 Your Stats</h3>
+          <div class="cnu-summary-stats">
+            <div class="cnu-stat">
+              <span class="stat-value" id="statUploads">0</span>
+              <span class="stat-label">Uploads</span>
+            </div>
+            <div class="cnu-stat">
+              <span class="stat-value" id="statSummaries">0</span>
+              <span class="stat-label">Summaries</span>
+            </div>
+            <div class="cnu-stat">
+              <span class="stat-value" id="statSaved">0</span>
+              <span class="stat-label">Saved</span>
+            </div>
+            <div class="cnu-stat">
+              <span class="stat-value" id="statWords">0</span>
+              <span class="stat-label">Words</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Upload History / Recent -->
+        <div class="cnu-sidebar-card">
+          <h3>🕐 Recent Notes</h3>
+          <div id="recentNotesList">
+            <div class="cnu-empty-state">
+              <span class="es-icon">📝</span>
+              <span class="es-title">No recent notes</span>
+              <span class="es-desc">Upload your first note to get started.</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Summary Tips -->
+        <div class="cnu-sidebar-card">
+          <h3>💡 Pro Tips</h3>
+          <div class="cnu-sidebar-item">
+            <span class="sbi-icon">📌</span>
+            <span class="sbi-text">Upload clean, typed notes for the best AI summaries.</span>
+          </div>
+          <div class="cnu-sidebar-item">
+            <span class="sbi-icon">✍️</span>
+            <span class="sbi-text">Use the refine button to shorten or expand a summary.</span>
+          </div>
+          <div class="cnu-sidebar-item">
+            <span class="sbi-icon">🔔</span>
+            <span class="sbi-text">Saved notes persist in your browser — no account needed.</span>
+          </div>
+          <div class="cnu-sidebar-item">
+            <span class="sbi-icon">🖨️</span>
+            <span class="sbi-text">Export summaries as text files per subject.</span>
+          </div>
+        </div>
+
+      </aside>
+    </div>
+
+    <!-- ===== EXTRA FEATURES BAR ===== -->
+    <div class="cnu-extra-features">
+      <div class="cnu-extra-card" id="exportAllBtn">
+        <span class="ef-icon">📄</span>
+        <div class="ef-info">
+          <span class="ef-title">Export All</span>
+          <span class="ef-desc">Download all saved summaries as a text file</span>
+        </div>
+      </div>
+      <div class="cnu-extra-card" id="downloadPdfBtn">
+        <span class="ef-icon">🖨️</span>
+        <div class="ef-info">
+          <span class="ef-title">Print / PDF</span>
+          <span class="ef-desc">Print the current summary as a PDF</span>
+        </div>
+      </div>
+      <div class="cnu-extra-card" id="shareSummaryBtn">
+        <span class="ef-icon">🔗</span>
+        <div class="ef-info">
+          <span class="ef-title">Share Summary</span>
+          <span class="ef-desc">Copy a shareable link to the current summary</span>
+        </div>
+      </div>
+      <div class="cnu-extra-card" id="clearAllBtn">
+        <span class="ef-icon">🗑️</span>
+        <div class="ef-info">
+          <span class="ef-title">Clear All</span>
+          <span class="ef-desc">Remove all saved notes and reset the page</span>
+        </div>
+      </div>
+      <div class="cnu-extra-card" id="studyCardsBtn">
+        <span class="ef-icon">🃏</span>
+        <div class="ef-info">
+          <span class="ef-title">Study Cards</span>
+          <span class="ef-desc">Convert summary points into flashcards</span>
+        </div>
+      </div>
+      <div class="cnu-extra-card" id="a11yBtn">
+        <span class="ef-icon">♿</span>
+        <div class="ef-info">
+          <span class="ef-title">Accessibility</span>
+          <span class="ef-desc">Font scaling and text-to-speech</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="site-footer" style="position:relative;z-index:1;">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <h3>ReVena</h3>
+        <p>AI-powered e-library platform designed to make studying smarter, more collaborative, and deeply engaging.</p>
+        <div class="footer-social">
+          <a href="#" aria-label="Twitter">𝕏</a>
+          <a href="#" aria-label="LinkedIn">in</a>
+          <a href="#" aria-label="GitHub">GH</a>
+          <a href="#" aria-label="YouTube">YT</a>
+        </div>
+      </div>
+      <div class="footer-links">
+        <div class="footer-col">
+          <h4>Platform</h4>
+          <a href="../../index.html#features-content">Smart Content</a>
+          <a href="../../index.html#features-ai">AI Features</a>
+          <a href="../../index.html#features-testing">Active Recall</a>
+          <a href="../../index.html#features-planning">Productivity</a>
+        </div>
+        <div class="footer-col">
+          <h4>Quick Links</h4>
+          <a href="../../index.html#features-content">Smart Content &amp; Delivery</a>
+          <a href="../../index.html#features-ai">AI &amp; Personalization</a>
+          <a href="../../index.html#features-testing">Active Recall &amp; Testing</a>
+          <a href="../../index.html#features-planning">Planning &amp; Productivity</a>
+          <a href="#">Help Center</a>
+        </div>
+        <div class="footer-col">
+          <h4>More</h4>
+          <a href="#">About Us</a>
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Service</a>
+          <a href="#">Accessibility</a>
+          <a href="#">Contact Support</a>
+        </div>
+        <div class="footer-col footer-highlights">
+          <h4>Highlights</h4>
+          <ul>
+            <li>♿ Accessibility First</li>
+            <li>🔒 Secure Cloud Storage</li>
+            <li>📱 Multi-Device Sync</li>
+            <li>🌙 Dark Mode</li>
+            <li>⚡ Offline Access</li>
+            <li>📊 Progress Reports</li>
+            <li>🔄 Auto Backup</li>
+            <li>🧠 Spaced Repetition</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 ReVena — Smart Exam E-Library Platform. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- ===== SCROLL TO TOP ===== -->
+  <button id="scrollTopBtn" class="scroll-top-btn" aria-label="Scroll to top">↑</button>
+
+  <!-- ===== SCRIPTS ===== -->
+  <script src="../../../js/shared.js"></script>
+  <script src="../../../js/class-notes-upload.js"></script>
+</body>
+</html>
+

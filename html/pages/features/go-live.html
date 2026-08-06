@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Go Live — Live Meetings | ReVena E-Library</title>
+  <meta name="description" content="Start or join live classroom meetings. Google Meet / Zoom-style rooms with video, chat, screen share and shareable invite links." />
+  <link rel="stylesheet" href="../../../css/go-live.css" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='40' fill='%239ae6ff'/%3E%3C/svg%3E" />
+</head>
+<body>
+
+  <div class="page-bg" aria-hidden="true">
+    <img src="../../../assets/images/Home.png" alt="Background" />
+  </div>
+
+  <div id="toastContainer" class="toast-container" aria-live="polite"></div>
+
+  <!-- ===== TOP HEADER BAR ===== -->
+  <header class="vl-header">
+    <div class="vl-header-left">
+      <div class="vl-logo">
+        <canvas id="headerAtomicCanvas"></canvas>
+        <span>ReVena</span>
+      </div>
+      <nav class="vl-nav">
+        <a href="../../index.html">Home</a>
+        <a href="textbook-library.html">Textbooks</a>
+        <a href="reference-books.html">Reference</a>
+        <a href="video-lectures.html">Lectures</a>
+        <a href="#" class="active">Go Live</a>
+        <a href="../account/profile.html">My Account</a>
+      </nav>
+    </div>
+    <div class="vl-header-center">
+      <div class="vl-search">
+        <input type="text" id="meetingSearchInput" placeholder="Search meetings by code or host..." />
+        <button id="meetingSearchBtn" aria-label="Search">🔍</button>
+      </div>
+    </div>
+    <div class="vl-header-right">
+      <a href="video-lectures.html" class="vl-header-btn">🎬 Back to Lectures</a>
+    </div>
+  </header>
+
+  <div class="vl-page">
+
+    <!-- ===== LIVE MEETINGS SECTION ===== -->
+    <div class="vl-live-section">
+      <div class="vl-live-header">
+        <h2>🔴 Live Meetings</h2>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+          <button class="vl-btn vl-btn-primary" id="createMeetingBtn">🚀 Go Live — Start Meeting</button>
+          <div style="display:flex;gap:6px;align-items:center;">
+            <input type="text" id="joinMeetingInput" placeholder="Enter meeting code..." style="padding:6px 12px;background:var(--input-bg);border:1px solid var(--input-border);border-radius:20px;color:var(--text-primary);font-size:0.82rem;font-family:var(--font-main);outline:none;width:180px;" />
+            <button class="vl-btn vl-btn-outline" id="joinMeetingBtn">🔗 Join</button>
+          </div>
+        </div>
+      </div>
+
+      <p class="vl-section-sub" style="margin-bottom:16px;">Start a live classroom session just like Google Meet / Zoom. Share the invite link and anyone can join instantly.</p>
+
+      <div class="vl-live-grid" id="liveGrid">
+        <p class="vl-muted" style="text-align:center;padding:40px 0;grid-column:1/-1;">No active meetings. Click "Go Live — Start Meeting" to begin!</p>
+      </div>
+    </div>
+
+    <!-- ================================================================ -->
+    <!-- MODAL: MEETING ROOM (Google Meet / Zoom style) -->
+    <!-- ================================================================ -->
+    <div id="meetRoomModal" class="yt-modal-overlay vl-meet-overlay">
+      <div class="vl-meet-room">
+        <div class="vl-meet-header">
+          <div class="vl-meet-header-left">
+            <span id="meetTitle" style="font-weight:600;font-size:0.95rem;">Meeting Room</span>
+            <span id="meetCodeLabel" style="font-size:0.78rem;color:var(--text-muted);margin-left:12px;"></span>
+          </div>
+          <div class="vl-meet-header-right">
+            <button class="vl-btn vl-btn-sm vl-btn-outline" id="copyMeetLinkBtn" title="Copy invite link">🔗 Copy Invite Link</button>
+            <button class="vl-btn vl-btn-sm vl-btn-danger" id="leaveMeetBtn">✕ Leave</button>
+          </div>
+        </div>
+        <div class="vl-meet-body">
+          <div class="vl-meet-grid" id="meetGrid">
+            <!-- Self video -->
+            <div class="vl-meet-tile" id="selfTile">
+              <video id="selfVideo" autoplay playsinline muted style="width:100%;height:100%;object-fit:cover;border-radius:8px;"></video>
+              <div class="vl-meet-tile-label">
+                <span id="selfTileName">You</span>
+                <span id="selfTileMic">🎤</span>
+              </div>
+              <div class="vl-meet-tile-overlay" id="selfCameraOff" style="display:none;">
+                <span style="font-size:2.5rem;">🙋</span>
+                <span style="font-size:0.82rem;color:var(--text-muted);">Camera off</span>
+              </div>
+            </div>
+            <!-- Participant tiles will be added here dynamically -->
+          </div>
+          <div class="vl-meet-chat" id="meetChatPanel">
+            <div class="vl-meet-chat-header">
+              <span>💬 Meeting Chat</span>
+            </div>
+            <div class="vl-meet-chat-messages" id="meetChatMessages">
+              <p class="vl-muted" style="text-align:center;padding:12px;font-size:0.78rem;">No messages yet. Say hello!</p>
+            </div>
+            <div class="vl-meet-chat-input">
+              <input type="text" id="meetChatInput" placeholder="Type a message..." />
+              <button id="meetChatSendBtn">📤</button>
+            </div>
+          </div>
+        </div>
+        <div class="vl-meet-controls">
+          <button class="vl-meet-ctrl-btn" id="meetMicBtn" title="Toggle microphone">🎤</button>
+          <button class="vl-meet-ctrl-btn" id="meetCamBtn" title="Toggle camera">🎥</button>
+          <button class="vl-meet-ctrl-btn" id="meetScreenShareBtn" title="Share screen">🖥️</button>
+          <button class="vl-meet-ctrl-btn" id="meetChatToggleBtn" title="Toggle chat">💬</button>
+          <button class="vl-meet-ctrl-btn vl-meet-ctrl-leave" id="meetLeaveBtn">🔴 Leave</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== EXTRA FEATURES BAR ===== -->
+    <div class="vl-extra-features" style="margin-top:24px;">
+      <div class="vl-extra-card" data-feature="howto">
+        <span class="ef-icon">📖</span>
+        <div class="ef-info">
+          <span class="ef-title">How it works</span>
+          <span class="ef-desc">Start a meeting, copy invite link, share</span>
+        </div>
+      </div>
+      <div class="vl-extra-card" data-feature="recordings">
+        <span class="ef-icon">🎞️</span>
+        <div class="ef-info">
+          <span class="ef-title">Recordings</span>
+          <span class="ef-desc">Saved sessions will appear here</span>
+        </div>
+      </div>
+      <div class="vl-extra-card" data-feature="schedule">
+        <span class="ef-icon">🗓️</span>
+        <div class="ef-info">
+          <span class="ef-title">Schedule</span>
+          <span class="ef-desc">Plan upcoming live lectures</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="site-footer" style="position:relative;z-index:1;">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <h3>ReVena</h3>
+        <p>AI-powered e-library platform designed to make studying smarter, more collaborative, and deeply engaging.</p>
+        <div class="footer-social">
+          <a href="#" aria-label="Twitter">𝕏</a>
+          <a href="#" aria-label="LinkedIn">in</a>
+          <a href="#" aria-label="GitHub">GH</a>
+          <a href="#" aria-label="YouTube">YT</a>
+        </div>
+      </div>
+      <div class="footer-links">
+        <div class="footer-col">
+          <h4>Platform</h4>
+          <a href="../../index.html#features-content">Smart Content</a>
+          <a href="../../index.html#features-ai">AI Features</a>
+          <a href="../../index.html#features-testing">Active Recall</a>
+          <a href="../../index.html#features-planning">Productivity</a>
+        </div>
+        <div class="footer-col">
+          <h4>Quick Links</h4>
+          <a href="video-lectures.html">Video Lectures</a>
+          <a href="youtube-study-library.html">YouTube Library</a>
+          <a href="textbook-library.html">Textbooks</a>
+          <a href="reference-books.html">Reference Books</a>
+        </div>
+        <div class="footer-col">
+          <h4>More</h4>
+          <a href="#">About Us</a>
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Service</a>
+          <a href="#">Contact Support</a>
+        </div>
+        <div class="footer-col footer-highlights">
+          <h4>Highlights</h4>
+          <ul>
+            <li>🔴 Live Meetings</li>
+            <li>🎥 Video Conferencing</li>
+            <li>💬 In-Meeting Chat</li>
+            <li>🔗 Shareable Invite Links</li>
+            <li>🖥️ Screen Sharing</li>
+            <li>📱 Multi-Device Sync</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 ReVena — Smart Exam E-Library Platform. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <button id="scrollTopBtn" class="scroll-top-btn" aria-label="Scroll to top">↑</button>
+
+  <script src="../../../js/shared.js"></script>
+  <script src="../../../js/go-live.js"></script>
+</body>
+</html>
+

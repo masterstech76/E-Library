@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sticky Notes — ReVena E-Library</title>
+  <meta name="description" content="Create, organize, and manage color-coded sticky notes. Rich text editing, drag & drop, voice notes, and more." />
+  <link rel="stylesheet" href="../../../css/sticky-notes.css" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='40' fill='%239ae6ff'/%3E%3C/svg%3E" />
+</head>
+<body>
+
+  <!-- ===== BACKGROUND ===== -->
+  <div class="page-bg" aria-hidden="true">
+    <img src="../../../assets/images/Home.png" alt="Background" />
+  </div>
+
+  <!-- ===== TOAST CONTAINER ===== -->
+  <div id="toastContainer" class="toast-container" aria-live="polite"></div>
+
+  <!-- ===== PAGE WRAPPER ===== -->
+  <div class="sn-page">
+
+    <!-- ===== HEADER ===== -->
+    <header class="sn-header">
+      <div class="sn-header-left">
+        <div class="sn-logo">
+          <canvas id="headerAtomicCanvas"></canvas>
+          <span>ReVena</span>
+        </div>
+        <nav class="sn-nav" aria-label="Sticky notes navigation">
+          <a href="../../index.html">Home</a>
+          <a href="textbook-library.html">Textbooks</a>
+          <a href="reference-books.html">Reference</a>
+          <a href="#" class="active">Sticky Notes</a>
+          <a href="../account/profile.html">My Account</a>
+        </nav>
+      </div>
+      <div class="sn-search-bar">
+        <input type="text" id="globalSearchInput" class="form-control" placeholder="Search notes, subjects, or tags..." />
+        <button id="globalSearchBtn" class="search-btn" aria-label="Search">🔍</button>
+      </div>
+    </header>
+
+    <!-- ===== BREADCRUMB ===== -->
+    <div class="sn-breadcrumb">
+      <a href="../../index.html">Home</a>
+      <span> › </span>
+      <span>Sticky Notes</span>
+    </div>
+
+    <!-- ===== SECTION HEADER ===== -->
+    <div class="sn-section-header">
+      <h1>📌 <strong>Sticky Notes</strong></h1>
+      <p>Your personal study companion — create color-coded notes, pin important ones, organize by categories, and never forget a thing.</p>
+      <div class="sn-badge-row">
+        <span>🏷️ Color Coding</span>
+        <span>📌 Pin to Top</span>
+        <span>🔄 Drag &amp; Drop</span>
+        <span>🎤 Voice Notes</span>
+        <span>🏷️ Categories</span>
+        <span>📤 Export</span>
+      </div>
+    </div>
+    <!-- END section-header -->
+
+    <!-- ===== MAIN LAYOUT ===== -->
+    <div class="sn-main">
+
+      <!-- ===== LEFT / CENTER CONTENT ===== -->
+      <div class="sn-center">
+
+        <!-- ===== DASHBOARD CONTROLS ===== -->
+        <div class="sn-dashboard-controls">
+          <button id="addNoteBtn" class="sn-add-btn">➕ Add Note</button>
+          <input type="text" id="searchNotes" class="sn-search-input" placeholder="Search by keyword or tag..." />
+          <div class="view-toggle">
+            <button id="viewGridBtn" class="active" title="Grid view">▦</button>
+            <button id="viewBoardBtn" title="Board view">📋</button>
+          </div>
+        </div>
+        <!-- END dashboard-controls -->
+
+        <!-- ===== COLOR FILTER CHIPS ===== -->
+        <div class="sn-color-chips" id="colorChips">
+          <button class="sn-color-chip all-chip active" data-color="all">All</button>
+          <button class="sn-color-chip" data-color="yellow" style="background:#ffd43b;" title="Yellow"></button>
+          <button class="sn-color-chip" data-color="green" style="background:#51cf66;" title="Green"></button>
+          <button class="sn-color-chip" data-color="blue" style="background:#339af0;" title="Blue"></button>
+          <button class="sn-color-chip" data-color="pink" style="background:#f06595;" title="Pink"></button>
+          <button class="sn-color-chip" data-color="purple" style="background:#9775fa;" title="Purple"></button>
+          <button class="sn-color-chip" data-color="orange" style="background:#ff922b;" title="Orange"></button>
+          <button class="sn-color-chip" data-color="teal" style="background:#20c997;" title="Teal"></button>
+          <button class="sn-color-chip" data-color="red" style="background:#ff6b6b;" title="Red"></button>
+        </div>
+
+        <!-- ===== STATS BAR ===== -->
+        <div class="sn-stats-bar" id="statsBar">
+          <div class="sn-stat-card">
+            <span class="sn-stat-value" id="totalNotesCount">0</span>
+            <span class="sn-stat-label">Total Notes</span>
+          </div>
+          <div class="sn-stat-card">
+            <span class="sn-stat-value" id="pinnedCount">0</span>
+            <span class="sn-stat-label">Pinned</span>
+          </div>
+          <div class="sn-stat-card">
+            <span class="sn-stat-value" id="archivedCount">0</span>
+            <span class="sn-stat-label">Archived</span>
+          </div>
+          <div class="sn-stat-card">
+            <span class="sn-stat-value" id="lastEditedTime">—</span>
+            <span class="sn-stat-label">Last Edited</span>
+          </div>
+        </div>
+        <!-- END stats-bar -->
+
+        <!-- ===== NOTES GRID ===== -->
+        <div class="sn-notes-grid" id="notesGrid"></div>
+
+      </div>
+      <!-- END sn-center -->
+
+      <!-- ===== RIGHT SIDEBAR ===== -->
+      <aside class="sn-sidebar-right" aria-label="Quick access">
+
+        <!-- Categories -->
+        <div class="sn-sidebar-card">
+          <h3>📂 Categories</h3>
+          <div id="categoriesList">
+            <div class="sn-category-item active" data-category="all">
+              <span class="cat-icon">📋</span>
+              <span class="cat-name">All Notes</span>
+              <span class="cat-count" id="catAllCount">0</span>
+            </div>
+            <div class="sn-category-item" data-category="study">
+              <span class="cat-icon">📚</span>
+              <span class="cat-name">Study</span>
+              <span class="cat-count" id="catStudyCount">0</span>
+            </div>
+            <div class="sn-category-item" data-category="reminder">
+              <span class="cat-icon">⏰</span>
+              <span class="cat-name">Reminders</span>
+              <span class="cat-count" id="catReminderCount">0</span>
+            </div>
+            <div class="sn-category-item" data-category="idea">
+              <span class="cat-icon">💡</span>
+              <span class="cat-name">Ideas</span>
+              <span class="cat-count" id="catIdeaCount">0</span>
+            </div>
+            <div class="sn-category-item" data-category="exam">
+              <span class="cat-icon">📝</span>
+              <span class="cat-name">Exam Prep</span>
+              <span class="cat-count" id="catExamCount">0</span>
+            </div>
+            <div class="sn-category-item" data-category="project">
+              <span class="cat-icon">🔧</span>
+              <span class="cat-name">Projects</span>
+              <span class="cat-count" id="catProjectCount">0</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Filters -->
+        <div class="sn-sidebar-card">
+          <h3>🔍 Quick Filters</h3>
+          <button class="sn-quick-filter active" data-filter="active">📄 Active Notes</button>
+          <button class="sn-quick-filter" data-filter="pinned">📌 Pinned</button>
+          <button class="sn-quick-filter" data-filter="archived">🗄️ Archived</button>
+          <button class="sn-quick-filter" data-filter="trash">🗑️ Trash</button>
+        </div>
+
+        <!-- Recently Viewed -->
+        <div class="sn-sidebar-card">
+          <h3>🕐 Recently Edited</h3>
+          <div id="recentlyEdited">
+            <p class="text-muted" style="font-size:0.78rem;">No notes edited yet.</p>
+          </div>
+        </div>
+
+      </aside>
+      <!-- END sn-sidebar-right -->
+
+    </div>
+    <!-- END sn-main -->
+
+    <!-- ===== NOTE EDITOR MODAL ===== -->
+    <div id="noteEditorModal" class="sn-modal-overlay">
+      <div class="sn-modal">
+        <div class="sn-modal-header">
+          <h2 id="modalTitle">📝 New Note</h2>
+          <button id="modalClose" class="sn-modal-close">&times;</button>
+        </div>
+        <div class="sn-modal-body">
+
+          <!-- Voice Recorder -->
+          <div id="voiceRecorder" class="sn-voice-recorder">
+            <span class="recording-indicator"></span>
+            <span class="recording-time" id="recordingTime">00:00</span>
+            <button id="stopRecordingBtn" class="stop-recording">■ Stop</button>
+            <button id="cancelRecordingBtn" class="cancel-recording">✕ Cancel</button>
+          </div>
+
+          <!-- A11Y Controls -->
+          <div class="sn-a11y-controls">
+            <label>
+              🔤 Font Size
+              <input type="range" id="fontSizeSlider" min="12" max="24" value="16" />
+            </label>
+            <button id="ttsBtn">🔊 Read Aloud</button>
+          </div>
+
+          <!-- Title -->
+          <input type="text" id="noteTitleInput" class="sn-modal-title-input" placeholder="Note title..." />
+
+          <!-- Formatting Toolbar -->
+          <div class="sn-format-toolbar">
+            <button data-cmd="bold" title="Bold"><b>B</b></button>
+            <button data-cmd="italic" title="Italic"><i>I</i></button>
+            <button data-cmd="underline" title="Underline"><u>U</u></button>
+            <span class="toolbar-divider"></span>
+            <button data-cmd="insertUnorderedList" title="Bullet list">•</button>
+            <button data-cmd="insertOrderedList" title="Numbered list">1.</button>
+            <span class="toolbar-divider"></span>
+            <button data-cmd="removeFormat" title="Clear formatting">✕</button>
+          </div>
+
+          <!-- Editor Content -->
+          <div id="noteContentEditor" class="sn-editor-content" contenteditable="true" placeholder="Start typing your note here..."></div>
+
+          <!-- Color Picker -->
+          <div class="sn-modal-color-picker" id="modalColorPicker">
+            <button class="color-option active" data-color="yellow" style="background:#ffd43b;" title="Yellow"></button>
+            <button class="color-option" data-color="green" style="background:#51cf66;" title="Green"></button>
+            <button class="color-option" data-color="blue" style="background:#339af0;" title="Blue"></button>
+            <button class="color-option" data-color="pink" style="background:#f06595;" title="Pink"></button>
+            <button class="color-option" data-color="purple" style="background:#9775fa;" title="Purple"></button>
+            <button class="color-option" data-color="orange" style="background:#ff922b;" title="Orange"></button>
+            <button class="color-option" data-color="teal" style="background:#20c997;" title="Teal"></button>
+            <button class="color-option" data-color="red" style="background:#ff6b6b;" title="Red"></button>
+          </div>
+
+          <!-- Meta Controls -->
+          <div class="sn-modal-meta">
+            <label>
+              <input type="checkbox" id="pinCheckbox" />
+              📌 Pin to top
+            </label>
+            <select id="categorySelect">
+              <option value="study">📚 Study</option>
+              <option value="reminder">⏰ Reminder</option>
+              <option value="idea">💡 Idea</option>
+              <option value="exam">📝 Exam Prep</option>
+              <option value="project">🔧 Project</option>
+              <option value="other">📋 Other</option>
+            </select>
+            <input type="text" id="tagsInput" class="sn-tags-input" placeholder="Tags: comma, separated" />
+          </div>
+
+          <!-- Actions -->
+          <div class="sn-modal-actions">
+            <button id="deleteNoteBtn" class="btn btn-secondary" style="display:none;">🗑️ Delete</button>
+            <button id="archiveNoteBtn" class="btn btn-secondary" style="display:none;">🗄️ Archive</button>
+            <button id="saveNoteBtn" class="btn btn-primary">💾 Save Note</button>
+            <button id="cancelNoteBtn" class="btn btn-secondary">Cancel</button>
+          </div>
+
+        </div>
+        <!-- END modal-body -->
+      </div>
+      <!-- END modal -->
+    </div>
+    <!-- END modal-overlay -->
+
+    <!-- ===== EXTRA FEATURES BAR ===== -->
+    <div class="sn-extra-features">
+      <div class="sn-extra-card" id="exportPdfBtn">
+        <span class="ef-icon">📄</span>
+        <div class="ef-info">
+          <span class="ef-title">Export as PDF</span>
+          <span class="ef-desc">Download all notes as a PDF document</span>
+        </div>
+      </div>
+      <div class="sn-extra-card" id="exportTxtBtn">
+        <span class="ef-icon">📝</span>
+        <div class="ef-info">
+          <span class="ef-title">Export as Text</span>
+          <span class="ef-desc">Download notes as a plain text file</span>
+        </div>
+      </div>
+      <div class="sn-extra-card" id="voiceNoteBtn">
+        <span class="ef-icon">🎤</span>
+        <div class="ef-info">
+          <span class="ef-title">Voice Note</span>
+          <span class="ef-desc">Record a short audio note</span>
+        </div>
+      </div>
+      <div class="sn-extra-card" id="collabBtn">
+        <span class="ef-icon">👥</span>
+        <div class="ef-info">
+          <span class="ef-title">Collaboration</span>
+          <span class="ef-desc">Share notes with classmates</span>
+        </div>
+      </div>
+      <div class="sn-extra-card" id="a11yBtn">
+        <span class="ef-icon">♿</span>
+        <div class="ef-info">
+          <span class="ef-title">Accessibility</span>
+          <span class="ef-desc">Font scaling, text-to-speech, dark mode</span>
+        </div>
+      </div>
+      <div class="sn-extra-card" id="analyticsBtn">
+        <span class="ef-icon">📊</span>
+        <div class="ef-info">
+          <span class="ef-title">Analytics</span>
+          <span class="ef-desc">Track note usage and patterns</span>
+        </div>
+      </div>
+    </div>
+    <!-- END extra-features -->
+
+    <!-- ===== ANALYTICS PANEL ===== -->
+    <div class="sn-analytics-panel" id="analyticsPanel" style="display:none;">
+      <div class="sn-analytics-card">
+        <span class="an-icon">📝</span>
+        <span class="an-value" id="anTotalNotes">0</span>
+        <span class="an-label">Total Notes</span>
+      </div>
+      <div class="sn-analytics-card">
+        <span class="an-icon">📌</span>
+        <span class="an-value" id="anPinnedNotes">0</span>
+        <span class="an-label">Pinned</span>
+      </div>
+      <div class="sn-analytics-card">
+        <span class="an-icon">🎨</span>
+        <span class="an-value" id="anTopColor">—</span>
+        <span class="an-label">Most Used Color</span>
+      </div>
+      <div class="sn-analytics-card">
+        <span class="an-icon">📂</span>
+        <span class="an-value" id="anTopCategory">—</span>
+        <span class="an-label">Top Category</span>
+      </div>
+      <div class="sn-analytics-card">
+        <span class="an-icon">🕐</span>
+        <span class="an-value" id="anLastEdited">—</span>
+        <span class="an-label">Last Edited</span>
+      </div>
+      <div class="sn-analytics-card">
+        <span class="an-icon">🗑️</span>
+        <span class="an-value" id="anDeleted">0</span>
+        <span class="an-label">Deleted</span>
+      </div>
+    </div>
+    <!-- END analytics-panel -->
+
+    <!-- ===== UPLOAD SECTION ===== -->
+    <section id="uploadSection" class="sn-upload-section">
+      <h2 class="section-title">📤 Import Notes from File</h2>
+      <p class="section-subtitle">Upload a text file or paste content from documents to create notes automatically.</p>
+      <div class="sn-upload-layout">
+        <div>
+          <div id="dropZone" class="sn-drop-zone">
+            <span class="dz-icon">📁</span>
+            <span class="dz-title">Drag &amp; Drop Files Here</span>
+            <span class="dz-subtitle">or click to browse</span>
+            <span class="dz-formats">Supported: .txt (max 2 MB each)</span>
+            <input type="file" id="fileInput" accept=".txt" multiple />
+          </div>
+          <p style="font-size:0.75rem; color:var(--text-muted); margin-top:8px; text-align:center;">
+            💡 Each file will create a new note with the filename as title.
+          </p>
+        </div>
+        <div>
+          <textarea id="pasteContentArea" class="form-control" placeholder="Or paste content here... One paragraph = one note" rows="8" style="resize:vertical;"></textarea>
+          <button id="createFromPasteBtn" class="btn btn-secondary" style="margin-top:12px;">📝 Create Notes from Paste</button>
+        </div>
+      </div>
+    </section>
+
+<!-- ===== FOOTER ===== -->
+    <footer class="site-footer" style="position:relative;z-index:1;">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <h3>ReVena</h3>
+          <p>AI-powered e-library platform designed to make studying smarter, more collaborative, and deeply engaging.</p>
+          <div class="footer-social">
+            <a href="#" aria-label="Twitter">𝕏</a>
+            <a href="#" aria-label="LinkedIn">in</a>
+            <a href="#" aria-label="GitHub">GH</a>
+            <a href="#" aria-label="YouTube">YT</a>
+          </div>
+        </div>
+        <div class="footer-links">
+          <div class="footer-col">
+            <h4>Platform</h4>
+            <a href="../../index.html#features-content">Smart Content</a>
+            <a href="../../index.html#features-ai">AI Features</a>
+            <a href="../../index.html#features-testing">Active Recall</a>
+            <a href="../../index.html#features-planning">Productivity</a>
+          </div>
+          <div class="footer-col">
+            <h4>Quick Links</h4>
+            <a href="../../index.html#features-content">Smart Content &amp; Delivery</a>
+            <a href="../../index.html#features-ai">AI &amp; Personalization</a>
+            <a href="../../index.html#features-testing">Active Recall &amp; Testing</a>
+            <a href="../../index.html#features-planning">Planning &amp; Productivity</a>
+            <a href="#">Help Center</a>
+          </div>
+          <div class="footer-col">
+            <h4>More</h4>
+            <a href="#">About Us</a>
+            <a href="#">Privacy Policy</a>
+            <a href="#">Terms of Service</a>
+            <a href="#">Accessibility</a>
+            <a href="#">Contact Support</a>
+          </div>
+          <div class="footer-col footer-highlights">
+            <h4>Highlights</h4>
+            <ul>
+              <li>♿ Accessibility First</li>
+              <li>🔒 Secure Cloud Storage</li>
+              <li>📱 Multi-Device Sync</li>
+              <li>🌙 Dark Mode</li>
+              <li>⚡ Offline Access</li>
+              <li>📊 Progress Reports</li>
+              <li>🔄 Auto Backup</li>
+              <li>🧠 Spaced Repetition</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 ReVena — Smart Exam E-Library Platform. All rights reserved.</p>
+      </div>
+    </footer>
+<!-- ===== SCRIPTS ===== -->
+  <script src="../../../js/shared.js"></script>
+  <script src="../../../js/sticky-notes.js"></script>
+</body>
+</html>
+

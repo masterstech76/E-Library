@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Profile — ReVena E-Library</title>
+  <meta name="description" content="Manage your ReVena profile — switch between Student and College roles" />
+  <link rel="stylesheet" href="../../../css/profile.css" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='40' fill='%239ae6ff'/%3E%3C/svg%3E" />
+</head>
+<body>
+
+  <!-- ===== BACKGROUND ===== -->
+  <div class="page-bg" aria-hidden="true">
+    <img src="../../../assets/images/Home.png" alt="Background" />
+  </div>
+
+  <!-- ===== TOAST CONTAINER ===== -->
+  <div id="toastContainer" class="toast-container" aria-live="polite"></div>
+
+  <!-- ===== PROFILE WRAPPER ===== -->
+  <div class="profile-wrapper">
+
+    <!-- LEFT: SIDEBAR -->
+    <aside class="profile-sidebar" aria-label="Profile sidebar">
+      <div class="sidebar-brand">
+        <canvas id="profileAtomicCanvas"></canvas>
+        <h2>ReVena</h2>
+      </div>
+
+      <!-- Avatar -->
+      <div class="profile-avatar-section">
+        <div class="avatar-wrapper">
+          <img src="https://ui-avatars.com/api/?name=User&background=9ae6ff&color=06070c&size=128" alt="Profile" id="profileAvatar" />
+          <button type="button" id="avatarUploadBtn" class="avatar-edit-btn" aria-label="Change profile picture">📷</button>
+          <input type="file" id="avatarUpload" accept="image/*" style="display:none" />
+        </div>
+        <h3 id="sidebarName">Tushar Chaudhari</h3>
+        <span class="sidebar-role" id="sidebarRole">Student</span>
+      </div>
+
+      <!-- Quick Stats -->
+      <div class="sidebar-stats">
+        <div class="stat-item">
+          <span class="stat-value">0</span>
+          <span class="stat-label">Courses</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-value">0</span>
+          <span class="stat-label">Resources</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-value">0</span>
+          <span class="stat-label">Badges</span>
+        </div>
+      </div>
+
+      <!-- Navigation -->
+      <nav class="sidebar-nav">
+        <a href="../../index.html" class="nav-item">
+          <span class="nav-icon">🏠</span>
+          <span class="nav-label">Home</span>
+        </a>
+        <a href="#profile-section" class="nav-item active">
+          <span class="nav-icon">👤</span>
+          <span class="nav-label">Profile</span>
+        </a>
+        <a href="../../pages/auth/login.html" class="nav-item">
+          <span class="nav-icon">🔐</span>
+          <span class="nav-label">Sign Out</span>
+        </a>
+      </nav>
+    </aside>
+
+    <!-- RIGHT: MAIN CONTENT -->
+    <main class="profile-main">
+      <div class="glass-card">
+
+        <!-- Header -->
+        <div class="profile-header">
+          <div>
+            <h1>My Profile</h1>
+            <p>Manage your personal information and account settings</p>
+          </div>
+        </div>
+
+        <!-- ===== SEARCH BAR ===== -->
+        <div class="profile-search-bar">
+          <input type="text" id="profileSearch" class="form-control" placeholder="🔍 Search profile fields, documents, or settings..." />
+        </div>
+
+        <!-- ===== ROLE SWITCHER ===== -->
+        <div class="role-switcher">
+          <span class="role-switcher-label">Account Type:</span>
+          <div class="role-toggle" id="roleToggle">
+            <button type="button" class="role-btn active" data-role="student">
+              <span class="role-icon">🎓</span>
+              <span class="role-text">Student</span>
+            </button>
+            <button type="button" class="role-btn" data-role="college">
+              <span class="role-icon">🏛️</span>
+              <span class="role-text">College</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- ===== PROFILE FORM ===== -->
+        <form id="profileForm" novalidate autocomplete="off">
+
+          <!-- === COMMON FIELDS (both roles) === -->
+          <section class="form-section active">
+            <h2>Basic Information</h2>
+            <p class="section-desc">Common details for all account types</p>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="fullName">Full Name <span class="required">*</span></label>
+                <input type="text" id="fullName" class="form-control" placeholder="Tushar Chaudhari" value="Tushar Chaudhari" data-validate="required" data-msg-required="Full name is required" />
+                <div class="validation-msg"></div>
+              </div>
+              <div class="form-group">
+                <label for="email">Email Address <span class="required">*</span></label>
+                <input type="email" id="email" class="form-control" placeholder="tushar@example.com" data-validate="required,email" data-msg-required="Email is required" />
+                <div class="validation-msg"></div>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="phone">Mobile Number <span class="required">*</span></label>
+                <input type="tel" id="phone" class="form-control" placeholder="+91 (555) 123-4567" data-validate="required,phone" data-msg-required="Phone is required" />
+                <div class="validation-msg"></div>
+              </div>
+              <div class="form-group">
+                <label for="dob">Date of Birth</label>
+                <input type="date" id="dob" class="form-control" />
+                <div class="validation-msg"></div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="address">Address</label>
+              <textarea id="address" class="form-control" placeholder="Street, City, State, ZIP" rows="2"></textarea>
+            </div>
+          </section>
+
+          <!-- === STUDENT-SPECIFIC FIELDS === -->
+          <section class="form-section role-section" id="studentFields" data-role="student">
+            <h2>🎓 Student Details</h2>
+            <p class="section-desc">Your academic information</p>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="studentId">Student ID / Roll Number <span class="required">*</span></label>
+                <input type="text" id="studentId" class="form-control" placeholder="S2024001" />
+                <div class="validation-msg"></div>
+              </div>
+              <div class="form-group">
+                <label for="course">Course / Program <span class="required">*</span></label>
+                <select id="course" class="form-control">
+                  <option value="">Select Course</option>
+                  <option value="bsc-cs">B.Sc. Computer Science</option>
+                  <option value="bsc-it">B.Sc. Information Technology</option>
+                  <option value="bca">BCA</option>
+                  <option value="mca">MCA</option>
+                  <option value="btech-cs">B.Tech Computer Science</option>
+                  <option value="btech-it">B.Tech IT</option>
+                  <option value="ba">B.A.</option>
+                  <option value="bcom">B.Com</option>
+                  <option value="other">Other</option>
+                </select>
+                <div class="validation-msg"></div>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="yearOfStudy">Year of Study <span class="required">*</span></label>
+                <select id="yearOfStudy" class="form-control">
+                  <option value="">Select Year</option>
+                  <option value="1">1st Year</option>
+                  <option value="2">2nd Year</option>
+                  <option value="3">3rd Year</option>
+                  <option value="4">4th Year</option>
+                  <option value="5">5th Year</option>
+                </select>
+                <div class="validation-msg"></div>
+              </div>
+              <div class="form-group">
+                <label for="semester">Semester <span class="required">*</span></label>
+                <select id="semester" class="form-control">
+                  <option value="">Select Semester</option>
+                  <option value="1">Semester 1</option>
+                  <option value="2">Semester 2</option>
+                  <option value="3">Semester 3</option>
+                  <option value="4">Semester 4</option>
+                  <option value="5">Semester 5</option>
+                  <option value="6">Semester 6</option>
+                  <option value="7">Semester 7</option>
+                  <option value="8">Semester 8</option>
+                </select>
+                <div class="validation-msg"></div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="institution">Institution / College Name <span class="required">*</span></label>
+              <input type="text" id="institution" class="form-control" placeholder="University of Technology" />
+              <div class="validation-msg"></div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="department">Department</label>
+                <input type="text" id="department" class="form-control" placeholder="Computer Science" />
+                <div class="validation-msg"></div>
+              </div>
+              <div class="form-group">
+                <label for="cgpa">Current CGPA</label>
+                <input type="text" id="cgpa" class="form-control" placeholder="8.5" />
+                <div class="validation-msg"></div>
+              </div>
+            </div>
+          </section>
+
+          <!-- === COLLEGE-SPECIFIC FIELDS === -->
+          <section class="form-section role-section" id="collegeFields" data-role="college" style="display:none;">
+            <h2>🏛️ College Details</h2>
+            <p class="section-desc">Your institution information</p>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="collegeName">College / Institution Name <span class="required">*</span></label>
+                <input type="text" id="collegeName" class="form-control" placeholder="State University of Technology" />
+                <div class="validation-msg"></div>
+              </div>
+              <div class="form-group">
+                <label for="collegeCode">College Code / UGC ID <span class="required">*</span></label>
+                <input type="text" id="collegeCode" class="form-control" placeholder="AICTE-12345" />
+                <div class="validation-msg"></div>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="collegeType">Institution Type <span class="required">*</span></label>
+                <select id="collegeType" class="form-control">
+                  <option value="">Select Type</option>
+                  <option value="university">University</option>
+                  <option value="college">Affiliated College</option>
+                  <option value="institute">Institute</option>
+                  <option value="polytechnic">Polytechnic</option>
+                  <option value="school">School</option>
+                </select>
+                <div class="validation-msg"></div>
+              </div>
+              <div class="form-group">
+                <label for="affiliation">Affiliated To</label>
+                <input type="text" id="affiliation" class="form-control" placeholder="University Name" />
+                <div class="validation-msg"></div>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="collegeAddress">College Address <span class="required">*</span></label>
+                <textarea id="collegeAddress" class="form-control" placeholder="Street, City, State, ZIP" rows="2"></textarea>
+                <div class="validation-msg"></div>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="collegePhone">College Phone</label>
+                <input type="tel" id="collegePhone" class="form-control" placeholder="+91 (555) 987-6543" />
+                <div class="validation-msg"></div>
+              </div>
+              <div class="form-group">
+                <label for="collegeWebsite">College Website</label>
+                <input type="url" id="collegeWebsite" class="form-control" placeholder="https://www.university.edu" />
+                <div class="validation-msg"></div>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="programsOffered">Programs Offered</label>
+                <input type="text" id="programsOffered" class="form-control" placeholder="B.Tech, M.Tech, BCA, MCA" />
+                <div class="validation-msg"></div>
+              </div>
+              <div class="form-group">
+                <label for="totalStudents">Total Students Enrolled</label>
+                <input type="number" id="totalStudents" class="form-control" placeholder="5000" min="0" />
+                <div class="validation-msg"></div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="accreditation">Accreditations</label>
+              <input type="text" id="accreditation" class="form-control" placeholder="NAAC A+, NBA, AICTE Approved" />
+              <div class="validation-msg"></div>
+            </div>
+          </section>
+
+          <!-- === PREFERENCES === -->
+          <section class="form-section">
+            <h2>⚙️ Preferences</h2>
+            <p class="section-desc">Customize your learning experience</p>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="prefLanguage">Preferred Language</label>
+                <select id="prefLanguage" class="form-control">
+                  <option value="english">English</option>
+                  <option value="hindi">हिन्दी (Hindi)</option>
+                  <option value="spanish">Español (Spanish)</option>
+                  <option value="french">Français (French)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="prefTheme">Theme</label>
+                <select id="prefTheme" class="form-control">
+                  <option value="dark">Dark (Default)</option>
+                  <option value="light">Light</option>
+                  <option value="auto">System</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="checkbox-group">
+              <label class="checkbox-item">
+                <input type="checkbox" id="emailNotifications" checked />
+                <span class="check-box"></span>
+                <span class="check-label">Receive email notifications about new resources and updates</span>
+              </label>
+              <label class="checkbox-item">
+                <input type="checkbox" id="studyReminders" checked />
+                <span class="check-box"></span>
+                <span class="check-label">Enable daily study reminders and goal nudges</span>
+              </label>
+              <label class="checkbox-item">
+                <input type="checkbox" id="publicProfile" />
+                <span class="check-box"></span>
+                <span class="check-label">Make my profile visible to other students and mentors</span>
+              </label>
+            </div>
+          </section>
+
+          <!-- === UPLOADED DOCUMENTS SECTION === -->
+          <section class="form-section">
+            <h2>📎 Uploaded Documents</h2>
+            <p class="section-desc">Manage your profile documents, certificates, and IDs</p>
+
+            <div class="upload-grid">
+              <div class="upload-card">
+                <div class="upload-card-icon">🪪</div>
+                <div class="upload-card-info">
+                  <h4>ID Proof</h4>
+                  <p class="text-muted">Upload student ID, Aadhaar, or passport</p>
+                  <span class="upload-status" id="idProofStatus">❌ Not uploaded</span>
+                </div>
+                <button type="button" class="btn btn-secondary upload-trigger" data-target="idProof">Upload</button>
+                <input type="file" class="upload-input" id="idProof" accept="image/*,.pdf" style="display:none" />
+              </div>
+              <div class="upload-card">
+                <div class="upload-card-icon">🎓</div>
+                <div class="upload-card-info">
+                  <h4>Certificate</h4>
+                  <p class="text-muted">Upload academic certificates or marksheets</p>
+                  <span class="upload-status" id="certificateStatus">❌ Not uploaded</span>
+                </div>
+                <button type="button" class="btn btn-secondary upload-trigger" data-target="certificate">Upload</button>
+                <input type="file" class="upload-input" id="certificate" accept="image/*,.pdf" style="display:none" />
+              </div>
+              <div class="upload-card">
+                <div class="upload-card-icon">📄</div>
+                <div class="upload-card-info">
+                  <h4>Resume / CV</h4>
+                  <p class="text-muted">Upload your resume for mentor connections</p>
+                  <span class="upload-status" id="resumeStatus">❌ Not uploaded</span>
+                </div>
+                <button type="button" class="btn btn-secondary upload-trigger" data-target="resume">Upload</button>
+                <input type="file" class="upload-input" id="resume" accept=".pdf,.doc,.docx" style="display:none" />
+              </div>
+              <div class="upload-card">
+                <div class="upload-card-icon">📸</div>
+                <div class="upload-card-info">
+                  <h4>Profile Photo</h4>
+                  <p class="text-muted">Update your profile picture (or use avatar upload)</p>
+                  <span class="upload-status" id="photoStatus">❌ Not uploaded</span>
+                </div>
+                <button type="button" class="btn btn-secondary upload-trigger" data-target="profilePhoto">Upload</button>
+                <input type="file" class="upload-input" id="profilePhoto" accept="image/*" style="display:none" />
+              </div>
+            </div>
+          </section>
+
+          <!-- === FORM ACTIONS === -->
+          <div class="form-actions">
+            <button type="button" id="resetBtn" class="btn btn-secondary">↺ Reset Changes</button>
+            <button type="submit" id="saveBtn" class="btn btn-primary">💾 Save Profile</button>
+          </div>
+
+        </form>
+      </div>
+    </main>
+  </div>
+
+  <!-- ===== SCRIPTS ===== -->
+  <script src="../../../js/profile.js"></script>
+</body>
+</html>
+

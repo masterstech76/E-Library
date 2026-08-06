@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Text-to-Speech Engine — ReVena E-Library</title>
+  <meta name="description" content="Convert your study notes and summaries into natural-sounding audio. Listen hands-free with voice presets for different subjects." />
+  <link rel="stylesheet" href="../../../css/text-to-speech.css" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='40' fill='%239ae6ff'/%3E%3C/svg%3E" />
+</head>
+<body>
+
+  <!-- ===== BACKGROUND ===== -->
+  <div class="page-bg" aria-hidden="true">
+    <img src="../../../assets/images/Home.png" alt="Background" />
+  </div>
+
+  <!-- ===== TOAST CONTAINER ===== -->
+  <div id="toastContainer" class="toast-container" aria-live="polite"></div>
+
+  <!-- ===== PAGE WRAPPER ===== -->
+  <div class="tts-page">
+
+    <!-- ===== HEADER ===== -->
+    <header class="tts-header">
+      <div class="tts-header-left">
+        <div class="tts-logo">
+          <canvas id="headerAtomicCanvas"></canvas>
+          <span>ReVena</span>
+        </div>
+        <nav class="tts-nav" aria-label="Text-to-speech navigation">
+          <a href="../../index.html">Home</a>
+          <a href="class-notes-upload.html">Notes Upload</a>
+          <a href="one-page-summaries.html">Summaries</a>
+          <a href="#" class="active">Text-to-Speech</a>
+          <a href="youtube-study-library.html">YouTube</a>
+          <a href="../account/profile.html">My Account</a>
+        </nav>
+      </div>
+      <div class="tts-search-bar">
+        <input type="text" id="globalSearchInput" class="form-control" placeholder="Search saved audio clips..." />
+        <button id="globalSearchBtn" class="search-btn" aria-label="Search">🔍</button>
+      </div>
+    </header>
+
+    <!-- ===== BREADCRUMB ===== -->
+    <div class="tts-breadcrumb">
+      <a href="../../index.html">Home</a>
+      <span> › </span>
+      <span>Text-to-Speech Engine</span>
+    </div>
+
+    <!-- ===== SECTION HEADER ===== -->
+    <div class="tts-section-header">
+      <h1>🔊 <strong>Text-to-Speech Engine</strong></h1>
+      <p>Convert written words into natural voice — listen to your notes, summaries, and study materials hands-free. Perfect for auditory learners and multitasking.</p>
+      <div class="tts-badge-row">
+        <span>🗣️ Natural Voices</span>
+        <span>🎚️ Speed Control</span>
+        <span>🎵 Pitch Control</span>
+        <span>⬇️ Download MP3</span>
+        <span>📚 Subject Presets</span>
+        <span>♿ Accessible</span>
+      </div>
+    </div>
+
+    <!-- ===== MAIN LAYOUT ===== -->
+    <div class="tts-main">
+
+      <!-- ===== CENTER CONTENT ===== -->
+      <div class="tts-center">
+
+        <!-- ===== TEXT INPUT CARD ===== -->
+        <div class="tts-card">
+          <h2>📝 <span>Enter Text to Convert</span></h2>
+          <p class="section-subtitle">
+            Type, paste your notes below, or <span class="tts-upload-link" id="uploadFileLink">📤 upload a text file</span>.
+            The text is processed locally in your browser.
+          </p>
+          <textarea class="tts-text-input" id="ttsTextInput" placeholder="Paste your study notes, chapter summaries, or any text here...&#10;&#10;For example: The cell is the basic unit of life. Prokaryotic cells lack a nucleus while eukaryotic cells have a membrane-bound nucleus. The cell membrane controls what enters and leaves the cell."></textarea>
+          <div class="tts-input-meta">
+            <span id="wordCount">0 words</span>
+            <span id="charCount">0 characters</span>
+          </div>
+          <input type="file" id="ttsFileInput" accept=".txt" style="display:none;" />
+        </div>
+
+        <!-- ===== VOICE OPTIONS PANEL ===== -->
+        <div class="tts-card">
+          <h2>🎛️ <span>Voice Settings</span></h2>
+          <p class="section-subtitle">Choose your preferred voice, language, speed, and pitch.</p>
+
+          <div class="tts-voice-panel">
+            <!-- Voice -->
+            <div class="tts-voice-group">
+              <h4>🗣️ Voice</h4>
+              <select class="tts-select" id="voiceSelect">
+                <option value="">Loading voices...</option>
+              </select>
+            </div>
+
+            <!-- Language / Accent -->
+            <div class="tts-voice-group">
+              <h4>🌐 Accent / Language</h4>
+              <select class="tts-select" id="langSelect">
+                <option value="en-US">🇺🇸 English (US)</option>
+                <option value="en-GB">🇬🇧 English (UK)</option>
+                <option value="en-IN">🇮🇳 English (India)</option>
+                <option value="en-AU">🇦🇺 English (Australia)</option>
+                <option value="hi-IN">🇮🇳 Hindi</option>
+                <option value="es-ES">🇪🇸 Spanish</option>
+                <option value="fr-FR">🇫🇷 French</option>
+                <option value="de-DE">🇩🇪 German</option>
+              </select>
+            </div>
+
+            <!-- Speed -->
+            <div class="tts-voice-group">
+              <h4>🎚️ Speed</h4>
+              <div class="tts-slider-row">
+                <label>Slow</label>
+                <input type="range" id="speedSlider" min="0.3" max="2.0" step="0.1" value="1.0" />
+                <span class="tts-slider-value" id="speedValue">1.0x</span>
+              </div>
+            </div>
+
+            <!-- Pitch -->
+            <div class="tts-voice-group">
+              <h4>🎵 Pitch</h4>
+              <div class="tts-slider-row">
+                <label>Low</label>
+                <input type="range" id="pitchSlider" min="0.5" max="2.0" step="0.1" value="1.0" />
+                <span class="tts-slider-value" id="pitchValue">1.0</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Preset Modes -->
+          <div class="tts-presets">
+            <button class="tts-preset-btn" data-speed="0.8" data-pitch="1.0">🐢 Slow Revision</button>
+            <button class="tts-preset-btn" data-speed="1.0" data-pitch="1.0">🎯 Normal</button>
+            <button class="tts-preset-btn" data-speed="1.5" data-pitch="1.1">⚡ Fast Revision</button>
+            <button class="tts-preset-btn" data-speed="1.2" data-pitch="1.2">🎨 Lecture Mode</button>
+            <button class="tts-preset-btn" data-speed="0.7" data-pitch="0.9">🧘 Deep Focus</button>
+          </div>
+        </div>
+
+        <!-- ===== AUDIO PLAYBACK WIDGET ===== -->
+        <div class="tts-player" id="ttsPlayer">
+          <div class="tts-player-top">
+            <button class="tts-play-btn" id="playPauseBtn">▶️</button>
+            <div class="tts-player-info">
+              <span class="tts-player-title" id="playerTitle">Ready to play</span>
+              <span class="tts-player-status" id="playerStatus">0 words • prepared</span>
+            </div>
+          </div>
+
+          <!-- Waveform -->
+          <div class="tts-waveform" id="waveform">
+            <div class="tts-wave"></div><div class="tts-wave"></div><div class="tts-wave"></div>
+            <div class="tts-wave"></div><div class="tts-wave"></div><div class="tts-wave"></div>
+            <div class="tts-wave"></div><div class="tts-wave"></div><div class="tts-wave"></div>
+            <div class="tts-wave"></div><div class="tts-wave"></div><div class="tts-wave"></div>
+            <div class="tts-wave"></div><div class="tts-wave"></div><div class="tts-wave"></div>
+            <div class="tts-wave"></div><div class="tts-wave"></div><div class="tts-wave"></div>
+            <div class="tts-wave"></div><div class="tts-wave"></div>
+          </div>
+
+          <!-- Progress Bar -->
+          <div class="tts-progress-track">
+            <div class="tts-progress-fill" id="progressFill"></div>
+          </div>
+          <div class="tts-time-labels">
+            <span id="currentTime">0:00</span>
+            <span id="totalTime">0:00</span>
+          </div>
+
+          <!-- Actions -->
+          <div class="tts-actions">
+            <button class="tts-btn tts-btn-primary" id="downloadMp3Btn">⬇️ Download Audio</button>
+            <button class="tts-btn tts-btn-outline" id="saveClipBtn">💾 Save Audio Clip</button>
+            <button class="tts-btn tts-btn-outline" id="stopBtn">⏹️ Stop</button>
+          </div>
+        </div>
+
+        <!-- ===== CONVERT BUTTON ===== -->
+        <div class="tts-actions" style="justify-content:center; margin-top:4px;">
+          <button class="tts-btn tts-btn-primary" id="listenNowBtn" style="padding:12px 32px; font-size:0.95rem;">🔊 Listen Now</button>
+          <button class="tts-btn tts-btn-outline" id="toggleAutoReadBtn">📖 Auto-Read</button>
+        </div>
+
+      </div>
+
+      <!-- ===== RIGHT SIDEBAR ===== -->
+      <aside class="tts-sidebar-right" aria-label="Quick access">
+
+        <!-- Saved Clips -->
+        <div class="tts-sidebar-card">
+          <h3>💾 Saved Audio Clips</h3>
+          <div id="savedClipsList">
+            <p class="text-muted" style="font-size:0.78rem;">No saved clips yet.</p>
+          </div>
+        </div>
+
+        <!-- Voice Presets by Subject -->
+        <div class="tts-sidebar-card">
+          <h3>📚 Subject Voice Presets</h3>
+          <div id="subjectPresets">
+            <div class="tts-voice-preset-item" data-lang="en-US" data-speed="1.0" data-pitch="1.0">
+              <span class="vp-icon">📐</span>
+              <div>
+                <span class="vp-name">Mathematics</span>
+                <span class="vp-desc">Clear, medium pace</span>
+              </div>
+            </div>
+            <div class="tts-voice-preset-item" data-lang="en-US" data-speed="0.9" data-pitch="1.1">
+              <span class="vp-icon">🔬</span>
+              <div>
+                <span class="vp-name">Science</span>
+                <span class="vp-desc">Steady, detailed</span>
+              </div>
+            </div>
+            <div class="tts-voice-preset-item" data-lang="en-IN" data-speed="1.0" data-pitch="1.0">
+              <span class="vp-icon">📖</span>
+              <div>
+                <span class="vp-name">Literature</span>
+                <span class="vp-desc">Expressive, natural</span>
+              </div>
+            </div>
+            <div class="tts-voice-preset-item" data-lang="en-GB" data-speed="0.8" data-pitch="0.9">
+              <span class="vp-icon">📜</span>
+              <div>
+                <span class="vp-name">History</span>
+                <span class="vp-desc">Slow, formal</span>
+              </div>
+            </div>
+            <div class="tts-voice-preset-item" data-lang="en-US" data-speed="1.3" data-pitch="1.1">
+              <span class="vp-icon">💻</span>
+              <div>
+                <span class="vp-name">CS / IT</span>
+                <span class="vp-desc">Brisk, technical</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Best Practices -->
+        <div class="tts-sidebar-card">
+          <h3>💡 Best Practices</h3>
+          <div class="tts-tip-item">
+            <span class="tip-bullet">✦</span>
+            <span>Keep text under 1000 words for optimal listening.</span>
+          </div>
+          <div class="tts-tip-item">
+            <span class="tip-bullet">✦</span>
+            <span>Use the "Auto-Read" feature for hands-free study.</span>
+          </div>
+          <div class="tts-tip-item">
+            <span class="tip-bullet">✦</span>
+            <span>Save frequently used voice presets for each subject.</span>
+          </div>
+          <div class="tts-tip-item">
+            <span class="tip-bullet">✦</span>
+            <span>Download clips to listen offline while commuting.</span>
+          </div>
+          <div class="tts-tip-item">
+            <span class="tip-bullet">✦</span>
+            <span>Use "Slow Revision" for dense formulas and definitions.</span>
+          </div>
+        </div>
+
+      </aside>
+    </div>
+
+    <!-- ===== EXTRA FEATURES BAR ===== -->
+    <div class="tts-extra-features">
+      <div class="tts-extra-card" id="exportClipsBtn">
+        <span class="ef-icon">📄</span>
+        <div class="ef-info">
+          <span class="ef-title">Export Clips List</span>
+          <span class="ef-desc">Download a list of your saved audio clips</span>
+        </div>
+      </div>
+      <div class="tts-extra-card" id="ttsSummariesBtn">
+        <span class="ef-icon">📖</span>
+        <div class="ef-info">
+          <span class="ef-title">Read Current Summary</span>
+          <span class="ef-desc">Auto-load summary text from the page</span>
+        </div>
+      </div>
+      <div class="tts-extra-card" id="ttsShareBtn">
+        <span class="ef-icon">🔗</span>
+        <div class="ef-info">
+          <span class="ef-title">Share Audio Link</span>
+          <span class="ef-desc">Copy a shareable link to this audio</span>
+        </div>
+      </div>
+      <div class="tts-extra-card" id="ttsA11yBtn">
+        <span class="ef-icon">♿</span>
+        <div class="ef-info">
+          <span class="ef-title">Accessibility</span>
+          <span class="ef-desc">Font scaling, high contrast for controls</span>
+        </div>
+      </div>
+      <div class="tts-extra-card" id="ttsClearBtn">
+        <span class="ef-icon">🗑️</span>
+        <div class="ef-info">
+          <span class="ef-title">Clear All</span>
+          <span class="ef-desc">Remove all saved clips and reset</span>
+        </div>
+      </div>
+      <div class="tts-extra-card" id="ttsHelpBtn">
+        <span class="ef-icon">❓</span>
+        <div class="ef-info">
+          <span class="ef-title">Help &amp; Tips</span>
+          <span class="ef-desc">Learn how to get the most out of TTS</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="site-footer" style="position:relative;z-index:1;">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <h3>ReVena</h3>
+        <p>AI-powered e-library platform designed to make studying smarter, more collaborative, and deeply engaging.</p>
+        <div class="footer-social">
+          <a href="#" aria-label="Twitter">𝕏</a>
+          <a href="#" aria-label="LinkedIn">in</a>
+          <a href="#" aria-label="GitHub">GH</a>
+          <a href="#" aria-label="YouTube">YT</a>
+        </div>
+      </div>
+      <div class="footer-links">
+        <div class="footer-col">
+          <h4>Platform</h4>
+          <a href="../../index.html#features-content">Smart Content</a>
+          <a href="../../index.html#features-ai">AI Features</a>
+          <a href="../../index.html#features-testing">Active Recall</a>
+          <a href="../../index.html#features-planning">Productivity</a>
+        </div>
+        <div class="footer-col">
+          <h4>Quick Links</h4>
+          <a href="../../index.html#features-content">Smart Content &amp; Delivery</a>
+          <a href="../../index.html#features-ai">AI &amp; Personalization</a>
+          <a href="../../index.html#features-testing">Active Recall &amp; Testing</a>
+          <a href="../../index.html#features-planning">Planning &amp; Productivity</a>
+          <a href="#">Help Center</a>
+        </div>
+        <div class="footer-col">
+          <h4>More</h4>
+          <a href="#">About Us</a>
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Service</a>
+          <a href="#">Accessibility</a>
+          <a href="#">Contact Support</a>
+        </div>
+        <div class="footer-col footer-highlights">
+          <h4>Highlights</h4>
+          <ul>
+            <li>♿ Accessibility First</li>
+            <li>🔒 Secure Cloud Storage</li>
+            <li>📱 Multi-Device Sync</li>
+            <li>🌙 Dark Mode</li>
+            <li>⚡ Offline Access</li>
+            <li>📊 Progress Reports</li>
+            <li>🔄 Auto Backup</li>
+            <li>🧠 Spaced Repetition</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 ReVena — Smart Exam E-Library Platform. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- ===== SCROLL TO TOP ===== -->
+  <button id="scrollTopBtn" class="scroll-top-btn" aria-label="Scroll to top">↑</button>
+
+  <!-- ===== SCRIPTS ===== -->
+  <script src="../../../js/shared.js"></script>
+  <script src="../../../js/text-to-speech.js"></script>
+</body>
+</html>
+
